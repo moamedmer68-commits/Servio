@@ -13,7 +13,7 @@
 | Precedence | Constitution → **Master Plan** → ADRs → phase specs → plans → tasks → implementation |
 | Implementation status | **Not started.** Nothing in this document authorizes implementation. |
 
-### How to read this document
+## How to read this document
 
 - **[FACT]** means the item was verified, either from the workspace audit or from an official source. The source and date are given with it.
 - **[REC]** marks a recommendation. **[ASSUMP]** marks a provisional assumption. **[EST]** marks an estimate, not a commitment. **[OPEN]** marks a decision that is still unresolved.
@@ -1500,4 +1500,450 @@ These stay configurable without architectural change: the provider choice, model
 quantization, the embedding model (with a re-embed job), the reranker on or off, and concurrency
 limits. **No hardware purchase is required.**
 
-<!-- CONTINUE-4 -->
+---
+
+## 13. Phased Roadmap (High-Level Only)
+
+This is a vertical-slice roadmap (owner decision D5, constitution amendment A1). Effort is given
+in relative T-shirt sizes [EST] for one developer working with AI assistants. These are not
+dates. Detailed specifications, plans, and tasks are produced later, per phase, through Spec Kit.
+
+```mermaid
+flowchart LR
+    P0["0 Master Plan"] --> P1["1 Foundation + shell"]
+    P1 --> P2["2 Data, connectors, Customer 360"]
+    P2 --> P3["3 Evidence, RAG, graph"]
+    P3 --> P4["4 Case Intelligence + workflow"]
+    P4 --> P5["5 Safe actions + approvals"]
+    P3 --> P6["6 Market Intelligence"]
+    P6 --> P7["7 Idea Intelligence"]
+    P5 --> P8["8 Eval Lab, hardening, demo deploy"]
+    P7 --> P8
+```
+
+Phases 6 and 7 depend only on Phase 3, so they could run in parallel with phases 4 and 5. They
+are sequenced after Phase 5 by default to protect the headline demo.
+
+### Phase 0: Master Plan and environment audit *(this document)*
+- **Scope:** audit, architecture, ADRs, and roadmap. **Excluded:** any code.
+- **Exit:**
+  - The owner approves this plan.
+  - The constitution amendments (A1–A3) and exceptions (X1–X2) are applied and the constitution is
+    ratified.
+  - Git is initialized.
+
+### Phase 1: Secure multi-tenant foundation and bilingual shell, size **L** (priority P0)
+- **Includes (Module A, Module L shell):**
+  - repository scaffold and CI
+  - Supabase local stack, Alembic, and the DB roles
+  - tenants, memberships, the 6 roles, and the permission service
+  - RLS on all tables and the `TenantContext`
+  - the audit hash chain and the usage meter skeleton
+  - `/me`, members API, health checks
+  - the Next.js shell (AR/EN, RTL/LTR), sign-in, org switcher, members screen, audit screen
+  - structured logging and the trace ID
+- **Excluded:** connectors, AI.
+- **Demo:** two synthetic tenants. Switching language flips direction. A viewer cannot manage
+  members. A forged tenant header is rejected and visible in the audit log.
+- **Exit:**
+  - The cross-tenant negative suite passes for every table created.
+  - The RLS coverage test passes.
+  - The RTL and LTR Playwright snapshots pass.
+  - The secret scan is clean.
+  - The threat review is done.
+- **Risks:** Supabase JWT verification details; the X2 Next.js exception. **Cost:** $0.
+
+### Phase 2: Connectors, data foundation, and Customer 360, size **L** (P0)
+- **Includes (Modules B and E):**
+  - the connector contract and registry
+  - five mock connectors with fault injection
+  - the synthetic data generator, with versioned seeds in Arabic and English
+  - the Postgres job queue and worker
+  - `source_records` and canonical upserts
+  - document upload with storage
+  - the Connector Management screen
+  - the Customer 360 screen (profile, orders, shipments, tickets, transactions, source badges)
+- **Excluded:** embeddings, the graph, AI.
+- **Demo:** run the connectors, watch progress and an injected failure with retry, then open
+  Customer 360 for C-1001.
+- **Exit:**
+  - Idempotent re-runs produce no duplicates.
+  - Deleting a source cascades correctly.
+  - The job, connector, and storage isolation tests pass.
+- **Risks:** synthetic data realism, especially Arabic names and addresses. **Cost:** $0.
+
+### Phase 3: Evidence, hybrid RAG, and temporal knowledge graph, size **XL** (P0)
+- **Includes (Modules C, D, and E conflicts and timeline):**
+  - parsing (PDF, DOCX, XLSX, CSV) and Arabic normalization
+  - chunking, bge-m3 embeddings, and pgvector HNSW
+  - FTS and RRF hybrid search
+  - passage provenance, the citation model, and the conflict detector with source-authority
+    policies
+  - Neo4j, the outbox, the sync worker, reconciliation, and rebuild
+  - the timeline (`as_of`)
+  - the Evidence Explorer (sources, passages, timestamps, provenance, conflicts)
+  - the Customer 360 timeline and conflict banner
+  - `retrieval-v1`
+- **Excluded:** LLM reasoning.
+- **Demo:** an Arabic policy search returns cited passages. The C-1001 timeline shows the
+  courier-versus-GPS conflict. Killing the sync worker mid-run and restarting it converges.
+- **Exit:**
+  - retrieval-v1 meets its targets
+  - reconciliation diff = 0
+  - the cross-tenant vector and graph tests pass
+  - the rebuild is tested
+- **Risks:**
+  - Arabic retrieval quality
+  - Neo4j RAM use
+  - the effort cost of sync complexity
+- **Cost:** $0.
+
+### Phase 4: Case Intelligence and the agent workflow, size **XL** (P0)
+- **Includes (Modules F, G, and tracing from I):**
+  - provider abstraction (mock, free cloud, local) with the data-classification gate and degraded
+    mode
+  - the LangGraph `case_resolution` graph up to Assessment, Respond, Clarify, and Escalate
+  - CitationGuard, budgets, cancel, and resume
+  - Postgres checkpoints with RLS
+  - the OTel span store
+  - the case screen and workflow inspection view
+  - `ccrb-v1` (the analysis-only subset) and the eval runner CLI
+  - **the spike that chooses the primary free LLM (Q3)**
+- **Excluded:** executing actions.
+- **Demo:** analyze the missing-delivery case and get a cited, structured assessment, with the
+  full trace visible in the UI.
+- **Exit:**
+  - the B0 suite passes 100%
+  - the B2 run meets the citation and unsupported-claim targets
+  - the injection cases produce no policy violations
+  - the checkpoint isolation tests pass
+- **Risks:**
+  - free-tier rate limits during development (mitigated by mock-first)
+  - Arabic structured-output quality
+  - LangGraph checkpointer tenant column (ADR-006)
+
+### Phase 5: Safe actions and approvals, size **L** (P0)
+- **Includes (Module H):**
+  - the action catalog, risk policies, and PolicyEngine
+  - ActionPlanning, AuthorizationGate, AwaitApproval, Execute, Verify, and Reconcile
+  - idempotency (API and connector)
+  - approval hash binding and four-eyes
+  - the unknown-outcome reconciliation job
+  - compensation for refunds
+  - the Approval Center (parameters, evidence, risk, history)
+  - action history in Customer 360
+  - the full CCRB action cases
+- **Demo:** the **complete headline demo** (§1).
+- **Exit:**
+  - Policy, approval, and cross-tenant compliance = 0 violations (the hard gates).
+  - Duplicate executions = 0.
+  - The unknown → reconciled path is tested.
+- **Risks:** the complexity of the edge cases. **Cost:** $0.
+
+### Phase 6: Market Intelligence, thin, size **M** (P1)
+- **Includes (Module J):**
+  - the research source provider interface with the mock corpus
+  - the `market_research` graph: plan questions, retrieve, extract claims, credibility and
+    freshness scoring, conflict section, cited synthesis
+  - the competitor comparison table, built only from evidence
+  - Markdown and JSON export
+  - `market-v1`
+- **Excluded:** live web search (that is a P2 adapter behind the same interface), scheduled
+  monitoring.
+- **Demo:** the KSA last-mile competitor brief, with citations, a conflict section, and export.
+- **Exit:**
+  - market-v1 meets its targets
+  - runs are reproducible under the mock provider
+  - research-content injection cases pass
+
+### Phase 7: Idea Intelligence, thin, size **M** (P1)
+- **Includes (Module K):**
+  - idea intake
+  - the `idea_analysis` graph: problem and segment analysis, assumptions with evidence links, and
+    a competitor scan reusing Phase 6
+  - risks and feasibility
+  - configurable scoring profiles (visible weights and rubric)
+  - experiments and status tracking
+  - "preliminary" labelling
+  - `idea-v1`
+- **Demo:** the "COD verification via WhatsApp" idea scored transparently, with experiments
+  created.
+- **Exit:**
+  - idea-v1 meets its targets
+  - changing the scoring weights changes the scores deterministically
+
+### Phase 8: Evaluation Lab, hardening, and hosted demo, size **L** (P0 for the pitch)
+- **Includes (Module I UI, cross-cutting work):**
+  - **Evaluation Lab:** run comparison and metric drill-down to the trace.
+  - **Dashboard:** KPIs for cases, actions, and evaluation.
+  - **Settings:** usage and cost.
+  - **Security:** the full negative suite, a dependency and vulnerability scan, and the threat
+    model review.
+  - **Performance:** a performance smoke test.
+  - **Demo deployment:** demo compose with Caddy, the Oracle VM provisioning script,
+    backup and restore, and a demo-reset command.
+  - **Runbooks** and a **documented limitations** list.
+- **Demo:** a shareable HTTPS demo, plus a scripted pitch walkthrough in Arabic and English.
+- **Exit:**
+  - All hard gates pass.
+  - The full CCRB report is published in the Evaluation Lab.
+  - A restore from backup is tested.
+  - The limitations are documented, including X1 and X2.
+  - The owner accepts the MVP.
+- **Risks:** Oracle capacity and reclamation; ARM image availability.
+
+**Module → phase map:**
+
+| Module | Phase(s) |
+|--------|----------|
+| A | 1 |
+| B | 2 |
+| C | 3 |
+| D | 3 |
+| E | 2 and 3 |
+| F | 4 |
+| G | 4 and 5 |
+| H | 5 |
+| I | 4 (tracing, eval CLI) and 8 (Lab) |
+| J | 6 |
+| K | 7 |
+| L | every phase (shell in 1) |
+
+**Schedule-sensitive dependencies:**
+
+- Free-tier LLM limits (Phase 4)
+- LangGraph checkpointer extensibility (Phase 4)
+- Neo4j RAM and sync stability (Phase 3)
+- Oracle A1 capacity in the region (Phase 8)
+- The Next.js 14 exception, if a critical CVE forces an upgrade (any phase)
+
+---
+
+## 14. Environment and DevOps Strategy (described only; nothing executed)
+
+**First actions after approval (owner-authorized, in order):**
+
+1. `git init`, with a `.gitignore` covering `.env*`, `.conda/`, `node_modules/`, `.venv/`,
+   `eval/reports/`, and the Supabase `.temp`.
+2. A private GitHub repository (Q2).
+3. `/speckit-constitution` for the amendments.
+4. `/speckit-specify` for Phase 1.
+
+**Toolchain:**
+
+- **Python:** 3.12 via uv. The existing `.conda` 3.11 is unused.
+- **Node:** 24.19.0 is installed. Next 14.2's engines field requires ≥18.17. Node 24 compatibility
+  is [UNVERIFIED]. The fallback is Node 22 LTS via nvm-windows.
+- **Other tools:** Docker Desktop and the Supabase CLI.
+- **Optional:** Ollama and `just`.
+
+**Local services:** see the ADR-014 and §5.4 commands.
+
+**Environment variable inventory** (names and purposes only, no values):
+
+| Variable | Purpose |
+|----------|---------|
+| `SERVIO_AI_ENV` | `local` / `ci` / `demo` |
+| `SERVIO_AI_DATABASE_URL` | API/worker connection as `servio_ai_app` |
+| `SERVIO_AI_MIGRATION_DATABASE_URL` | Alembic connection as `servio_ai_migrator` |
+| `SERVIO_AI_SUPABASE_URL` / `SERVIO_AI_SUPABASE_JWT_SECRET` or `SERVIO_AI_SUPABASE_JWKS_URL` | JWT verification |
+| `SERVIO_AI_SUPABASE_SERVICE_ROLE_KEY` | Storage admin operations from the backend only (never in the frontend) |
+| `SERVIO_AI_STORAGE_BUCKET` | Object bucket name |
+| `SERVIO_AI_NEO4J_URI` / `SERVIO_AI_NEO4J_USER` / `SERVIO_AI_NEO4J_PASSWORD` | Graph connection |
+| `SERVIO_AI_LLM_PROVIDER_CHAIN` | e.g. `gemini,groq,ollama,mock` |
+| `SERVIO_AI_GEMINI_API_KEY`, `SERVIO_AI_GROQ_API_KEY`, `SERVIO_AI_OPENROUTER_API_KEY`, `SERVIO_AI_DEEPSEEK_API_KEY`, `SERVIO_AI_OPENAI_API_KEY` | Provider keys (optional) |
+| `SERVIO_AI_OLLAMA_BASE_URL` | Local runtime |
+| `SERVIO_AI_EMBEDDING_MODEL` / `SERVIO_AI_EMBEDDING_DEVICE` | Embedding model / `cuda` or `cpu` |
+| `SERVIO_AI_CREDENTIALS_KEY` | AES key for connector credentials |
+| `SERVIO_AI_RUN_MAX_TOKENS`, `SERVIO_AI_RUN_MAX_STEPS`, `SERVIO_AI_RUN_TIMEOUT_S` | Workflow budgets |
+| `SERVIO_AI_TENANT_DAILY_TOKEN_BUDGET` | Quota guard |
+| `SERVIO_AI_OTEL_EXPORTER_OTLP_ENDPOINT` | Optional Jaeger |
+| `SERVIO_AI_LOG_LEVEL` | Logging |
+| `SERVIO_AI_CORS_ORIGINS` | Allowed web origins |
+| `NEXT_PUBLIC_SERVIO_AI_API_BASE_URL` | Browser → API |
+| `NEXT_PUBLIC_SERVIO_AI_SUPABASE_URL` / `NEXT_PUBLIC_SERVIO_AI_SUPABASE_ANON_KEY` | Sign-in only (the anon key is public by design) |
+| `NEXT_PUBLIC_SERVIO_AI_DEFAULT_LOCALE` | `ar` |
+
+**Migrations:**
+
+- Alembic with SQL-first revisions. Every new tenant table must ship its RLS policy in the same
+  revision (enforced by the coverage test).
+- Forward-only in demo and production. Down revisions are kept for local development only.
+- Destructive changes use expand → migrate → contract.
+
+**CI (GitHub Actions):**
+
+1. **Lint and type checks:** ruff, mypy, eslint, tsc, and import-linter.
+2. **Unit tests.**
+3. **Integration tests:** Postgres with pgvector and Neo4j service containers, plus Supabase auth
+   (local stack, or a JWT stub signed with a test key).
+4. **Security checks:** the cross-tenant suite, gitleaks, pip-audit, npm audit, and an OpenAPI
+   diff check against `packages/api-contract`.
+5. **Playwright E2E** (AR and EN) against the mock provider.
+6. **Eval B0.**
+7. **Nightly:** eval B2 when the quota allows.
+
+**Deployment:**
+
+- The `deploy/vm/provision.sh` script (to be written in Phase 8) installs Docker and pulls the
+  `servio-ai-*` images. Images are built for `linux/arm64` with buildx in CI.
+- `docker compose -f docker-compose.demo.yml up -d`.
+- Migrate, then seed the demo tenant.
+- Health checks gate Caddy routing.
+
+---
+
+## 15. Testing and Operational Readiness
+
+**Test pyramid:**
+
+| Layer | Share [EST] | Examples |
+|-------|-------------|----------|
+| Unit | ~60% | permission matrix, TenantContext enforcement, citation validation, conflict comparators, risk classification, params-hash binding, idempotency key derivation, structured-output schemas, Arabic normalization |
+| Integration | ~25% | RLS per table (positive and negative), pgvector tenant-filtered ANN with iterative scan, Neo4j sync, reconciliation, rebuild, storage signed URLs, job queue concurrency, checkpoint resume, provider adapters (recorded fixtures), connector fault injection |
+| Workflow / AI | ~10% | CCRB on B0 (every PR) and B2 (nightly), retrieval-v1, market-v1, idea-v1 |
+| E2E | ~5% | Playwright: sign-in → tenant switch → Customer 360 → analyze → approve → verified; failed action; Market report; Idea scoring; RTL and LTR visual snapshots; mixed AR/EN content (numbers, dates, IDs, tables, charts) |
+
+**Security tests:** the cross-tenant matrix (every resource × read/write/search/traverse/file/
+action), forged context, self-approval, parameter tampering, replay and duplicate, prompt
+injection, secret scan, and the bundle secret check.
+
+**Monitoring (MVP):**
+
+- `/readyz` component status
+- the in-app Operations panel: job queue depth, outbox lag, provider status and fallback count,
+  error rate, and token usage
+- structured logs (`docker logs` plus optional Loki in P2)
+
+**Recovery:**
+
+- nightly `pg_dump` with a restore runbook
+- graph rebuild
+- re-embed job
+- demo reset
+- a reconciliation job for unknown actions
+
+**Production-readiness gaps (explicitly not covered by the MVP):**
+
+- high availability or clustering
+- point-in-time recovery
+- a secret manager and key rotation
+- SSO/SAML
+- alerting and on-call
+- formal penetration testing
+- data residency and compliance review
+- a supported Next.js version
+- paid no-training LLMs
+- Neo4j database-layer isolation
+- load testing beyond the demo scale
+- SLA definitions
+
+---
+
+## 16. Risks and Unresolved Decisions
+
+| # | Risk | Sev | Lik | Mitigation | Owner decision needed? |
+|---|------|-----|-----|------------|------------------------|
+| R1 | Free LLM tiers change, throttle, or disappear, so the demo fails live | High | Medium | Fallback chain, the local 4B model, mock "demo-safe" mode with recorded runs, pre-warmed demo, laptop fallback | Approve a paid budget only if the pitch requires it (later) |
+| R2 | Scope (12 modules, bilingual) exceeds one developer's capacity | High | High | Vertical slices, thin J and K, fixed 6 roles, no custom agent editor, P2 deferrals | Re-prioritize at each phase exit |
+| R3 | Next.js 14 unpatched CVEs (X2) | High | Medium | Mitigations in §9, X2 review triggers, upgrade path to 16.x kept open by ADR-017 | **Yes:** revisit before any public demo URL is shared widely |
+| R4 | Neo4j adds RAM and sync burden on 16 GB / 12 GB | Medium | Medium | Heap caps, the outbox and rebuild, Postgres graph fallback behind `GraphRepository` | No, unless the trigger fires |
+| R5 | Oracle VM reclaimed or no A1 capacity | Medium | Medium | Scripted rebuild, backups, laptop fallback | No |
+| R6 | Arabic retrieval and structured-output quality is weak with small or free models | High | Medium | bge-m3, normalization, CitationGuard, evaluation gates, the Phase 4 model spike | No |
+| R7 | LangGraph Postgres checkpointer cannot carry `tenant_id` + RLS cleanly | Medium | Low | Custom checkpointer wrapper (ADR-006) | No |
+| R8 | GPLv3 (Neo4j) or other licence obligations in commercial use | Medium | Low | Unmodified server use over the network, legal review before commercial distribution | Yes, before commercial launch |
+| R9 | Free-tier providers train on demo prompts | Low | High | Synthetic-only data (D9) | Already decided |
+| R10 | Supabase self-host on ARM64 not supported for some images | Medium | Low | Verify early in Phase 1. Alternative: an x86 E2.1.Micro is too small, so the fallback is the laptop | No |
+
+**Open decisions (with defaults):**
+
+| Decision | Recommended default |
+|----------|---------------------|
+| Q1: `servio_ai` naming (ADR-018) | Approve |
+| Q2: Git and GitHub | Yes |
+| Q3: Primary free LLM | Phase 4 spike |
+| Q4: Retention | 90 days audit, 14 days traces |
+| Q5: Pilot policy | Real data triggers the production review |
+| Q6: Brand | Open Arabic font |
+| Job library | Hand-written queue vs `procrastinate`, decided in the Phase 2 plan |
+| Task runner | `just` |
+| Deployed secret manager | Deferred until production |
+| UI component kit version | Verify in the Phase 1 plan |
+
+---
+
+## 17. Approval Checklist
+
+The owner marks each item **Approve / Reject / Revise**.
+
+- [ ] Owner decisions D1–D17 are recorded correctly (§0.1)
+- [ ] Constitution amendments A1 (vertical-slice roadmap), A2 (free-tier providers + data gate), A3 (baseline additions)
+- [ ] Exception X1: Neo4j application-layer-only isolation
+- [ ] Exception X2: Next.js 14.2.x despite Unsupported status, with its review triggers
+- [ ] ADR-001: modular monolith in a monorepo
+- [ ] ADR-002: Supabase (CLI locally, self-hosted on the demo VM) for Auth, Storage, and Postgres
+- [ ] ADR-003: RLS + `SET LOCAL` tenant context with a non-bypass app role
+- [ ] ADR-004: pgvector + FTS hybrid retrieval with Arabic normalization
+- [ ] ADR-005: Neo4j Community as a derived graph (with the Postgres fallback)
+- [ ] ADR-006: LangGraph with deterministic gates and the Postgres checkpointer
+- [ ] ADR-007: provider abstraction, the $0 fallback chain, and the data-classification gate
+- [ ] ADR-008: connector contract; ADR-009: Postgres job queue; ADR-010: outbox sync
+- [ ] ADR-011: side-effect safety; ADR-012: OTel observability; ADR-013: in-house evaluation
+- [ ] ADR-014: local topology; ADR-015: Oracle Always Free demo VM; ADR-016: secrets
+- [ ] ADR-017: next-intl with logical CSS for i18n and RTL; ADR-018: `servio_ai` identifier forms
+- [ ] The six fixed roles and the permission matrix (§3.2), including four-eyes by default
+- [ ] Risk classes and action states (§8.6)
+- [ ] The directory structure and dependency rules (§5)
+- [ ] The evaluation hard gates and initial targets (§10.2)
+- [ ] Roadmap phases 0–8 with their exit criteria (§13)
+- [ ] First actions: `git init` and a private GitHub repository (§14)
+
+---
+
+## Closing Statement (planning assignment)
+
+1. **Inspected successfully:**
+   - the workspace structure
+   - the Spec Kit 1.0.1 configuration and the installed skills
+   - the full constitution v1.2.0
+   - tool versions (Node, Python, uv, Docker, Git, specify)
+   - hardware (CPU, RAM, GPU, disk)
+   - official sources for Next.js support, Neo4j editions and requirements, the Supabase Free plan,
+     the CLI and self-hosting, LangGraph, pgvector, Gemini data use, Oracle Always Free, and
+     next-intl compatibility
+2. **Could not be verified:**
+   - exact free-tier limits for Gemini, Groq, OpenRouter, and DeepSeek
+   - the bge-m3 parameter count and Arabic quality
+   - Supabase ARM64 self-host images
+   - Supabase CLI per-service toggles
+   - Node 24 compatibility with Next 14
+   - LangGraph checkpointer schema extensibility
+   - the shadcn/ui and React 18 versions
+   - Neo4j Community's ability to support a non-admin user
+   - GitHub Actions free minutes
+   - Oracle account availability in the owner's region
+   - the `.opencode/` and `.conda/` purposes
+3. **Recommended architecture:** a modular monolith (FastAPI + worker, Next.js 14.2), with
+   PostgreSQL + RLS as the system of record and the isolation boundary, pgvector + FTS hybrid RAG,
+   Neo4j Community as a derived temporal graph, LangGraph with deterministic authorization,
+   execution, and verification, a $0 provider fallback chain, and Supabase for Auth and Storage.
+
+   **Trade-offs:**
+   - a second database (Neo4j) and its sync burden
+   - application-only isolation for the graph
+   - an unsupported frontend framework version
+   - free-tier fragility for live demos
+
+   All of these were accepted by the owner and have mitigations and reconsideration triggers.
+4. **Most important unresolved decisions:**
+   - ratifying the amendments and exceptions (A1–A3, X1, X2)
+   - `servio_ai` naming
+   - Git and GitHub
+   - the primary free LLM (Phase 4 spike)
+   - retention periods
+5. **Implementation has not started.**
+6. **Only this Master Plan was created** (`docs/planning/MASTER_PLAN.md`, plus its parent
+   directories `docs/` and `docs/planning/`). No phase-specific plans, specifications, task lists,
+   Spec Kit artifacts, code, configuration, Git changes, installations, or infrastructure were
+   created or modified. **Explicit owner approval is required** before any phase-planning
+   workflow or implementation begins.
