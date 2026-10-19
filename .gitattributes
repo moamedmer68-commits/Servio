@@ -1,0 +1,49 @@
+# ==============================================================================
+# Servio AI — Git Attributes Configuration
+# ==============================================================================
+
+# Auto-detect text files and normalize line endings to LF in the repository
+* text=auto eol=lf
+
+# Explicitly enforce LF for shell scripts, Python, TypeScript/JS, and configs
+*.sh text eol=lf
+*.bash text eol=lf
+*.py text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.sql text eol=lf
+Dockerfile* text eol=lf
+
+# Enforce CRLF for Windows PowerShell and batch scripts (e.g., .specify/scripts/powershell/)
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pyc binary
+*.pyd binary
+*.dll binary
+*.so binary
+*.exe binary
+*.zip binary
+*.tar binary
+*.gz binary
+

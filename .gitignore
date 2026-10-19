@@ -1,0 +1,207 @@
+# ==============================================================================
+# Servio AI — Root Git Ignore Configuration
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Environment Variables & Secrets (Principle IX)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+credentials.json
+service-account*.json
+
+# ------------------------------------------------------------------------------
+# 2. Python / Backend (FastAPI, LangGraph, Conda, Virtual Environments)
+# ------------------------------------------------------------------------------
+.conda/
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Testing & Quality Tools (Pytest, Coverage, Mypy, Ruff)
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pyre/
+.pytype/
+cython_debug/
+
+# Jupyter / IPython
+.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+# ------------------------------------------------------------------------------
+# 3. Node.js / Frontend (Next.js 14.x, TypeScript)
+# ------------------------------------------------------------------------------
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Next.js build output
+.next/
+out/
+build/
+
+# Testing & Bundlers
+coverage/
+.nyc_output/
+.turbo/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs & Package Manager Caches
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+.npm/
+.eslintcache
+.stylelintcache
+
+# ------------------------------------------------------------------------------
+# 4. Databases, Local Storage, Docker & Data Volumes
+# ------------------------------------------------------------------------------
+# Local DB files & dumps
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.sql.gz
+
+# Local Docker volumes & service data (PostgreSQL, pgvector, Neo4j, Supabase)
+postgres-data/
+pgdata/
+neo4j-data/
+neo4j-logs/
+neo4j-import/
+neo4j-plugins/
+supabase/.temp/
+supabase/.branches/
+docker-data/
+volumes/
+data/local/
+
+# AI / LangGraph local checkpoints, caches & model weights
+.langgraph_api/
+.langchain.db
+*.gguf
+*.bin
+*.safetensors
+*.onnx
+*.pt
+*.pth
+models/cache/
+
+# ------------------------------------------------------------------------------
+# 5. IDEs, Editors & AI Assistant Local State
+# ------------------------------------------------------------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+
+# AI / Agent Local Runtimes & State
+# Explicitly ensure Constitution, Master Plan, Specs, and Spec Kit are NEVER ignored
+!.specify/
+!.specify/**
+!.specify/memory/constitution.md
+!docs/
+!docs/**
+!specs/
+!specs/**
+
+.opencode/
+.claude/
+.cursor/
+.aider*
+
+# ------------------------------------------------------------------------------
+# 6. Operating System & Temporary Files (Windows / macOS / Linux)
+# ------------------------------------------------------------------------------
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux & General Temp/Logs
+*~
+*.swp
+*.swo
+*.tmp
+*.temp
+*.bak
+*.log
+logs/
+tmp/
+temp/
+
