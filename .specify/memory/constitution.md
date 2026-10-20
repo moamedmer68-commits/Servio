@@ -1,37 +1,36 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 1.1.0 (proposed, unratified) → 1.2.0 (proposed, unratified)
-Bump rationale: MINOR. Two owner decisions add or materially expand mandatory guidance:
-  (a) the exact machine-identifier forms `servio-ai` and `SERVIO_AI_`, with usage rules, and
-  (b) English is required in the first release instead of in a phase chosen by the Master
-  Plan. Three decisions confirm rules already in v1.1.0 (canonical name, application- and
-  database-layer tenant isolation, no GPU required), with clarified wording only. Nothing is
-  removed or weakened, so this is not a MAJOR change.
+Version change: 1.2.0 (proposed, unratified) → 1.3.0 (proposed, unratified)
+Bump rationale: MINOR. Amendments A1–A6 (owner-approved for application on 2026-10-20) add
+  rules (A2 provider data controls, A3 migration discipline, A6 platform trust boundary and the
+  break-glass prohibition) and change Technology Baseline rows that ADRs govern (A3, A4, A5).
+  A1 replaces the phase list, which this constitution already allows to change with owner
+  approval. No principle is removed or weakened, and the project name is unchanged, so this is
+  not a MAJOR change.
 
-Owner decisions recorded (2026-10-19):
-  1. Canonical name "Servio AI": confirmed (no change in meaning)
-  2. `servio-ai` (lowercase identifiers) and `SERVIO_AI_` (env-var prefix): added
-  3. English in the first release alongside Arabic; Arabic remains default with correct RTL;
-     Master Plan must account for bilingual first-release scope: changed (was phase TBD)
-  4. Tenant isolation at application and database layers, mechanism by ADR: confirmed
-  5. Required workflows run without a GPU; GPU optional: confirmed
+Amendments applied:
+  A1 Delivery Workflow → Roadmap: Phase 0 plus nine vertical-slice execution phases; UI built in
+     every phase; Phase 6 = Supervisor Console and Platform Admin Console (Principle I aligned)
+  A2 Principle VIII: configurable providers incl. deterministic mock; declared data handling;
+     classification gate; no-external-LLM fallback; paid usage needs approved scope and cap
+  A3 Technology Baseline: Python 3.12 (proposed, pending verification), PostgreSQL job queue,
+     Supabase CLI SQL migrations, OpenTelemetry; migration-discipline rule
+  A4 Technology Baseline: Next.js 14.x → supported Next.js LTS (Active LTS preferred)
+  A5 Technology Baseline, Principles III and V: PostgreSQL temporal graph by default; Neo4j
+     optional derived store only after G-NEO, an ADR, and owner approval
+  A6 Principle III: separate platform trust domain, MFA, tenant-approved support grants
+     (read-only by default, at most four hours, audited), no break-glass path
 
-Modified principles (titles unchanged):
-  III. Tenant Isolation and Least Privilege: wording aligned with decision 4
-  VIII. Replaceable Providers, Local-First Development, and Free-Tier-First Cost Governance:
-    wording aligned with decision 5
-  XII. Arabic-First, Bilingual, Right-to-Left Experience: English required in the first
-    release; direction-aware RTL/LTR rendering; compliance covers both languages
-Unchanged principles: I, II, IV, V, VI, VII, IX, X, XI
-Modified sections: Project Identity (exact identifier-forms table); preamble (bilingual
-  interface); Delivery Workflow Roadmap (bilingual first-release note, phase names unchanged);
-  Technology Baseline open decisions; Governance (recorded owner decisions, amendment history);
-  version footer
+Modified principles (titles unchanged): I (roadmap reference), III (A5, A6), V (A5), VIII (A2)
+Unchanged principles: II, IV, VI, VII, IX, X, XI, XII
+Modified sections: Technology Baseline (rows, migration rule, open decisions); Delivery
+  Workflow → Roadmap; Governance (recorded owner decisions, amendment history); version footer
 Added sections: none
 Removed sections: none
-Resolved items: machine-identifier naming forms (removed from open decisions); timing of
-  English support.
+Resolved items: background job mechanism, migration tool, observability stack, frontend version
+  policy, and default graph store (moved from open decisions to the Baseline); identifier forms
+  for restricted contexts and the `SERVIO_AI_` prefix combination (delegated to ADR-018).
 
 Dependent templates:
   ✅ .specify/templates/plan-template.md: no edit required; its "Constitution Check" gate and
@@ -97,8 +96,8 @@ constitution, unless the change would weaken a principle.
   dependencies, risks, testing strategy, and exit criteria.
 - An owner-approved Master Plan (architecture, roadmap, shared contracts) MUST exist before any
   execution phase begins. The environment audit and master planning stage precedes Phase 1.
-- Delivery MUST follow the nine-phase roadmap in *Delivery Workflow and Quality Gates*. Each
-  phase MUST have its own reviewable specification, technical plan, task breakdown, acceptance
+- Delivery MUST follow the roadmap in *Delivery Workflow and Quality Gates*: Phase 0 followed by
+  nine execution phases. Each phase MUST have its own reviewable specification, technical plan, task breakdown, acceptance
   criteria, and tests. A phase MUST NOT begin until its specification and plan are approved.
 - Phase work MUST stay consistent with the Master Plan's dependencies and shared architectural
   contracts.
@@ -148,7 +147,7 @@ New infrastructure without an approved ADR is a constitution violation.
 - Every tenant-owned resource and operation MUST have a defined owning tenant and explicit
   authorization rules.
 - Tenant isolation MUST cover PostgreSQL data, pgvector embeddings, Neo4j nodes and
-  relationships, files and object storage, connectors and their credentials, background jobs,
+  relationships (if Neo4j is adopted), files and object storage, connectors and their credentials, background jobs,
   caches, agent state and checkpoints, evaluation data, audit records, logs and traces, and usage
   and cost data.
 - Tenant isolation MUST be enforced at both the application layer and the database layer.
@@ -157,6 +156,18 @@ New infrastructure without an approved ADR is a constitution violation.
 - The server MUST derive tenant context and validate it against the authenticated identity and
   that identity's authorized membership. A client-supplied tenant identifier MUST NOT be treated
   as sufficient authorization.
+- Platform administration MUST be a separate trust domain from tenant administration, with its
+  own identities, roles, permissions, and audit records. A platform role MUST NOT grant access to
+  tenant content.
+- Platform administration MUST require multi-factor authentication.
+- Platform staff MAY access tenant content only through a support grant that is requested with a
+  stated reason, approved by the tenant owner or an authorized tenant administrator, read-only by
+  default, limited to at most four hours, revocable, and fully recorded in the tenant's audit
+  records. A scope broader than read-only requires an approved ADR and the tenant's explicit
+  approval for that grant. Access under a grant MUST use a validated tenant context and the
+  ordinary tenant authorization path.
+- No emergency, break-glass, or other path MAY bypass tenant approval of support access. Adding
+  such a path requires a constitution amendment.
 - Retrieval, vector, and graph queries MUST be tenant-scoped when executed. Filtering
   cross-tenant results after retrieval MUST NOT be the only control.
 - Authorization MUST be role-based. Users, service accounts, connectors, agents, and tools MUST
@@ -165,7 +176,8 @@ New infrastructure without an approved ADR is a constitution violation.
   resource type and every API or tool that touches one.
 
 **Compliance:** Each specification lists the tenant-owned resources it introduces. Missing
-isolation tests block completion.
+isolation tests block completion. Platform negative tests cover every tenant-content route with
+no grant, an expired grant, and a revoked grant.
 
 ### IV. Evidence-Grounded Reasoning
 
@@ -194,10 +206,11 @@ metrics (Principle X).
 - Conflicts MUST be resolved by documented source-authority rules, business policies,
   verification status, temporal context, and evidence quality. Unresolved conflicts MUST be
   surfaced, not hidden.
-- PostgreSQL is the relational system of record unless an approved ADR establishes an exception.
-- Neo4j graph data and pgvector embeddings are derived data. Each derived store MUST have
-  documented synchronization, freshness, and reconciliation rules. Each SHOULD be rebuildable
-  from the system of record.
+- PostgreSQL is the relational system of record and the default store for the temporal knowledge
+  graph unless an approved ADR establishes an exception.
+- pgvector embeddings, and Neo4j graph data if Neo4j is adopted, are derived data. Each derived
+  store MUST have documented synchronization, freshness, and reconciliation rules. Each SHOULD be
+  rebuildable from the system of record.
 
 **Compliance:** Specifications that touch knowledge data state their source-authority and
 reconciliation rules. Conflict detection is an evaluated metric.
@@ -250,9 +263,21 @@ and evaluation criteria.
 
 ### VIII. Replaceable Providers, Local-First Development, and Free-Tier-First Cost Governance
 
-- Model access MUST go through a provider abstraction that supports OpenAI, DeepSeek, and
-  compatible or local providers where appropriate. Abstractions MUST be proportional to real
-  requirements, not speculative.
+- Model access MUST go through a provider abstraction with configurable providers: DeepSeek,
+  OpenAI, other cloud providers approved by the owner, applicable local runtimes, and a
+  deterministic mock provider. Abstractions MUST be proportional to real requirements, not
+  speculative.
+- Every configured provider MUST declare its data-handling properties, including whether inputs
+  may be used for training or service improvement, data retention, and processing location. An
+  undeclared property MUST be treated as its least favorable value.
+- Every tenant MUST carry a data classification. Provider routing MUST refuse any provider whose
+  declared data handling is incompatible with the tenant's classification. Non-synthetic data
+  MUST NOT be sent to a provider whose terms the owner has not approved.
+- The deterministic mock provider MUST support every required workflow with no external LLM, so
+  the system remains demonstrable when external providers are unavailable, exhausted, or not
+  approved.
+- Paid model usage MUST NOT begin without explicit owner approval that states its scope and
+  spending cap.
 - Unnecessary vendor-specific coupling SHOULD be avoided. Supabase is the default for
   authentication and storage, and MAY provide hosted PostgreSQL where appropriate. Adopting any
   provider-specific feature that would block replacement MUST be recorded in an ADR.
@@ -356,26 +381,33 @@ change requires an approved ADR.
 |------|---------|--------|
 | Specification framework | Spec Kit (installed v1.0.1) | Mandatory (Principle I) |
 | Architecture style | Clean-start modular monolith | Default; deviation by approved ADR |
-| Frontend | Next.js 14.x with TypeScript | Agreed default |
+| Frontend | Next.js, a supported LTS release (Active LTS preferred), with TypeScript | Agreed default. The selected major and exact version are recorded in an ADR and pinned in the lockfile. Compatibility with React, internationalization, UI, and chart dependencies MUST be verified before implementation. Unsupported majors MUST NOT be used. Support status is re-checked at each phase exit |
 | Backend | Python with FastAPI | Agreed default |
+| Backend runtime | Python 3.12 | Proposed; adopted after compatibility with the pinned FastAPI, LangGraph, and other dependencies is verified (ADR) |
+| Background jobs | PostgreSQL-backed job queue inside the system-of-record database; no separate message broker | Agreed default; queue library chosen by ADR |
+| Database migrations | Supabase CLI plain-SQL migrations, version-controlled, with database tests | Agreed default |
 | Authentication | Supabase Auth | Agreed default, subject to security review and ADR |
 | Relational system of record | PostgreSQL | Agreed default; exception by approved ADR |
 | Vector search | pgvector, where appropriate | Agreed default |
 | File storage | Supabase Storage, where appropriate | Agreed default |
-| Knowledge graph | Neo4j | Adopted only after edition, licensing, compatibility, and operational requirements are verified (ADR) |
+| Temporal knowledge graph | Modeled in PostgreSQL, the authoritative system of record | Agreed default |
+| Neo4j | Optional derived graph store | Adopted only after the G-NEO comparison, an approved ADR, and explicit owner approval. No MVP capability, test, or exit criterion may depend on it |
 | Agent orchestration | LangGraph (LangChain where useful) | Agreed default |
-| Model providers | Provider abstraction: OpenAI, DeepSeek, compatible or local providers | Agreed default |
+| Model providers | Provider abstraction: DeepSeek, OpenAI, other owner-approved cloud providers, local runtimes, deterministic mock | Agreed default; provider selection by evaluation and ADR |
+| Observability | OpenTelemetry traces with correlation identifiers; structured, redacted logs | Agreed default |
 | Secrets | Environment variables locally; secure secret management when deployed | Mandatory (Principle IX) |
 | Local development and deployment | Docker-based local development; production-ready deployment path | Agreed default; deployment target by ADR |
 
+Every schema change MUST be a reviewed, version-controlled migration. Manual schema changes to
+shared or hosted databases MUST NOT be made. Migrations MUST preserve tenant-isolation controls
+and MUST NOT contain secrets or real customer data.
+
 **Open decisions.** The following are NOT decided by this constitution. They MUST be resolved
 through ADRs approved during master planning (or in the phase that first needs them): exact
-pinned framework and library versions, Python version, the application- and database-layer
-tenant-isolation mechanism, background job mechanism, cloud demo and production hosting targets,
-deployed secret manager, specific LLM and embedding models, local model runtime, Neo4j edition
-and license, identifier forms for contexts that permit none of the approved forms (e.g., Python
-import names), how `SERVIO_AI_` combines with framework-required prefixes, and the ADR storage
-location.
+pinned framework and library versions, confirmation of the Python version, the application- and
+database-layer tenant-isolation mechanism, the job-queue library, cloud demo and production
+hosting targets, deployed secret manager, specific LLM and embedding models, local model runtime,
+the G-NEO outcome (Neo4j adoption, edition, and licence), and the ADR storage location.
 
 ### Architecture Decision Records
 
@@ -392,24 +424,29 @@ location.
 
 ### Roadmap
 
-The pre-execution stage, **Environment Audit and Master Planning**, produces the owner-approved
-Master Plan, shared contracts, and initial ADRs. The execution phases follow:
+The pre-execution stage, **Phase 0: Environment Audit and Master Planning**, produces the
+owner-approved Master Plan, shared contracts, and initial ADRs. Delivery then follows nine
+execution phases. Each phase is a vertical slice that delivers the bilingual user interface for
+the capabilities it builds:
 
-1. Foundation and Multi-Tenancy
-2. Data and Connector Framework
-3. Knowledge, Hybrid RAG, and Knowledge Graph
-4. Customer 360 and Case Intelligence
-5. AI Agents and Safe Actions
-6. Arabic-First Frontend
+1. Secure Multi-Tenant Foundation, Platform Identity, and Bilingual Shell
+2. Connectors, Data Foundation, and Customer 360
+3. Evidence, Hybrid RAG, and Temporal Knowledge Graph
+4. Case Intelligence and Agent Workflow
+5. Safe Actions and Approvals
+6. Supervisor Console and Platform Admin Console
 7. Market Intelligence
 8. Idea Intelligence
-9. Evaluation, Security Hardening, and Deployment
+9. Evaluation Lab, Security Hardening, and Hosted Demo
 
-The Master Plan defines phase dependencies. Reordering, merging, or splitting phases is a
-Master Plan change that requires owner approval.
-
-The first release is bilingual (Principle XII). The Master Plan MUST account for English
-alongside Arabic in every phase that delivers user-facing work, including Phase 6.
+- User-facing capabilities MUST be delivered in the phase that builds them. Frontend work MUST
+  NOT be deferred to a single late phase.
+- The first release is bilingual (Principle XII). Every phase that delivers user-facing work MUST
+  include Arabic (RTL) and English (LTR) acceptance criteria.
+- The Master Plan defines phase dependencies, the per-module MVP minimum, and the approved MVP
+  deferral lists. Reordering, merging, or splitting phases, or moving any item between MVP and
+  deferred, is a Master Plan change that requires owner approval.
+- A phase MUST pass its exit gate before any phase that depends on it begins.
 
 ### Phase Gates
 
@@ -479,6 +516,10 @@ version. Recording them does not ratify the constitution.
 | 2026-10-19 | English supported in the first release alongside Arabic; Arabic remains default with correct RTL; Master Plan accounts for bilingual first-release scope | Principle XII; Roadmap |
 | 2026-10-19 | Tenant isolation enforced at application and database layers; mechanism by approved ADR | Principle III |
 | 2026-10-19 | Required workflows run without a GPU; GPU acceleration optional | Principle VIII |
+| 2026-10-20 | Canonical name remains `Servio AI`; "VERITAS AI" remains historical | Project identity |
+| 2026-10-20 | Amendments A1–A6 approved for application with the reviewed wording | Roadmap; Principles I, III, V, VIII; Technology Baseline |
+| 2026-10-20 | No emergency or break-glass path may bypass tenant approval of support access; adding one requires a constitution amendment | Principle III |
+| 2026-10-20 | Support grants: read-only by default, at most four hours, approved by the tenant owner or an authorized tenant administrator, audited; MFA for platform administration | Principle III |
 
 **Amendment history.**
 
@@ -486,8 +527,9 @@ version. Recording them does not ratify the constitution.
 |---------|------|---------|-----------------|
 | 1.0.0 | 2026-10-19 | Initial constitution created from the owner brief (principles A–S) | Proposed; superseded by 1.1.0 before ratification |
 | 1.1.0 | 2026-10-19 | Canonical name set to Servio AI; clean-start rule; agreed technology defaults; local-first, CPU-only, bilingual, RBAC, and database-layer isolation rules | Proposed; superseded by 1.2.0 before ratification |
-| 1.2.0 | 2026-10-19 | Recorded owner decisions: exact identifier forms (`servio-ai`, `SERVIO_AI_`); English required in the first release; confirmed name, two-layer tenant isolation, and no-GPU requirement | Proposed; awaiting owner ratification |
+| 1.2.0 | 2026-10-19 | Recorded owner decisions: exact identifier forms (`servio-ai`, `SERVIO_AI_`); English required in the first release; confirmed name, two-layer tenant isolation, and no-GPU requirement | Proposed; superseded by 1.3.0 before ratification |
+| 1.3.0 | 2026-10-20 | Amendments A1–A6: vertical-slice roadmap (Phase 0 + 9 phases); provider data controls and mock fallback; Baseline rows for Python 3.12, job queue, Supabase CLI migrations, OpenTelemetry; supported Next.js LTS; PostgreSQL-first temporal graph with optional Neo4j; platform trust boundary, MFA, support grants, no break-glass | Proposed; awaiting owner ratification |
 
 **Status**: Proposed. Not ratified; awaiting explicit owner approval.
 
-**Version**: 1.2.0 | **Ratified**: TODO(RATIFICATION_DATE): set on explicit owner approval | **Last Amended**: 2026-10-19
+**Version**: 1.3.0 | **Ratified**: TODO(RATIFICATION_DATE): set on explicit owner approval | **Last Amended**: 2026-10-20
