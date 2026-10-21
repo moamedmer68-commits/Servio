@@ -12,15 +12,22 @@ Amendments in 2.0.0 (owner decisions D45–D51, 2026-10-21; applied to the propo
   B1 Project identity: canonical name `Servio`; descriptor kept as tagline; machine forms
      `Servio`, `servio`, `SERVIO_`; `servio_ai` kept for the Postgres schema, database roles, and
      the Python import package; "Servio AI" added to the historical names
-  B2 Technology Baseline, Frontend: Next.js 14.2.35 with React 18.3.1 (owner-required,
-     Unsupported upstream) under time-boxed security exception X2 (ADR-017); unsupported majors
-     permitted only under an approved, time-boxed exception recorded in an ADR
-  B3 Technology Baseline, Backend runtime: Python 3.12 confirmed (3.12.15); dependency resolution
-     verified 2026-10-21 (ADR-022)
+  B2 Technology Baseline, Frontend: Next.js 14.2.35 with React 18.3.1 (owner preference,
+     Unsupported upstream) under time-boxed security exception X2 (ADR-017), limited to
+     development and private demos; public deployment blocked until gate G-WEB and an explicit
+     owner decision; unsupported majors permitted only under an approved, time-boxed exception
+     recorded in an ADR
+  B3 Technology Baseline, Backend runtime: Python 3.11.x (owner override 2026-10-21 of the
+     earlier 3.12.15 wording); dependency resolution verified by a read-only dry run; runtime
+     compatibility and exact patch unverified (ADR-022)
   B4 Technology Baseline, Model providers: DeepSeek (`deepseek-flash`) is the selected primary
      provider; OpenAI, other approved providers, local runtimes, and the mock stay configurable;
-     paid use limited to the approved $5 prepaid cap (synthetic data only)
+     DeepSeek adapter disabled until activation is separately approved; proposed USD 5 aggregate
+     paid-testing cap; no paid key in CI, nightly evaluations, or demos (synthetic data only)
   B5 Open decisions updated; Governance records the 2026-10-21 owner decisions
+Revision before ratification (2026-10-21, same version 2.0.0, still unratified): B3 changed from
+  Python 3.12.15 to 3.11.x; B4 cap wording changed from "approved" to "proposed, subject to
+  activation approval"; B2 scope narrowed to development and private demos.
 Approval-record correction: the 1.3.0 report said amendments A1–A6 were "owner-approved for
   application". Accurate wording: A1–A6 were approved for application to the proposed text on
   2026-10-20; they were not ratified. The same applies to B1–B5.
@@ -34,7 +41,8 @@ Added sections: none
 Removed sections: none
 Unchanged: PostgreSQL remains the relational system of record and default temporal graph store;
   Neo4j remains optional behind G-NEO, an approved ADR, and explicit owner approval.
-Resolved items: Python version confirmation; primary LLM provider (embedding model still open).
+Resolved items: Python minor version (3.11.x; exact patch still open); primary LLM provider
+  (embedding model still open).
 
 Dependent templates:
   ✅ .specify/templates/plan-template.md: no edit required; its "Constitution Check" gate and
@@ -47,9 +55,14 @@ Deferred items / follow-up TODOs:
   TODO(RATIFICATION_DATE): Set only when the project owner explicitly approves a final version.
     Until then the status of this document is "Proposed".
   Open decisions to be settled by ADR during master planning (see Technology Baseline).
-  Exception X2 (Next.js 14.2.35) must be re-approved before the Phase 9 hosted demo, before any
-    real-data pilot, or when a new Critical/High advisory affecting 14.x has no mitigation.
-  Master Plan and ADR-007, ADR-017, ADR-018, ADR-022 must reflect B1–B4 (Master Plan v0.4.0).
+  Exception X2 (Next.js 14.2.35) covers development and private demos only. Any public
+    deployment is blocked until gate G-WEB (ADR-017) and an explicit owner decision. X2 is also
+    reviewed before any real-data pilot, or when a new Critical/High advisory affecting 14.x has
+    no mitigation. Mitigations are not patches.
+  DeepSeek activation and the proposed USD 5 cap require explicit owner approval before any
+    paid call (Principle VIII).
+  Python 3.11.x runtime compatibility and the exact patch are verified in Phase 1 (ADR-022).
+  Master Plan v0.4.0 (ADR-007, ADR-017, ADR-018, ADR-022) reflects B1–B4; it is Proposed.
 -->
 
 <!-- Owner brief → constitution mapping (v1.0.0 brief A–S):
@@ -68,7 +81,9 @@ graph, multi-agent orchestration, safe business automation, Market Intelligence 
 Intelligence, all delivered through an Arabic-first, bilingual (Arabic and English) interface.
 
 **Project identity.** The single canonical project name is **Servio**, with the descriptor
-(tagline) *Verified Enterprise Reasoning & Intelligent Task Automation System*. All active
+(tagline) *Verified Enterprise Reasoning & Intelligent Task Automation System* and the Arabic
+tagline *منصة الذكاء المؤسسي للاستدلال الموثق وأتمتة المهام الذكية*. The taglines are not alternative
+product names. All active
 documentation, configuration, metadata, prompts, and UI branding MUST use "Servio" with exactly
 this spelling and capitalization. Only the forms below MAY be used, each only in its stated
 context:
@@ -77,7 +92,7 @@ context:
 |------|---------|-------------|
 | `Servio` | Human-readable name and mixed-case identifiers (e.g., code identifiers) | Required in all prose, UI branding, metadata, and prompts; also used where a mixed-case identifier is needed |
 | `servio` | Identifiers that require lowercase (e.g., package, image, or project names) | Lowercase, exactly as shown. A component-specific identifier MUST begin with `servio-`; its full form is defined in the Master Plan |
-| `SERVIO_` | Prefix for project-defined environment variables | Full names follow `SERVIO_<NAME>`, where `<NAME>` uses uppercase letters, digits, and underscores. Variables whose names are dictated by an external framework, library, or provider keep the name that tool requires. How the prefix combines with a framework-required prefix (e.g., Next.js `NEXT_PUBLIC_`) MUST be decided in an ADR |
+| `SERVIO_` | Prefix for project-defined environment variables | Full names follow `SERVIO_<NAME>`, where `<NAME>` uses uppercase letters, digits, and underscores. Variables whose names are dictated by an external framework, library, or provider keep the name that tool requires. Frontend variables intentionally exposed to browsers use `NEXT_PUBLIC_SERVIO_<NAME>` (ADR-018). A `NEXT_PUBLIC_` variable MUST NOT carry a secret |
 | `servio_ai` | Internal database and Python identifiers: the PostgreSQL schema, database roles, and the Python import package | Owner-approved internal identifier (2026-10-20, retained 2026-10-21). It is not a product name and MUST NOT appear in prose or UI branding. Derived names are defined in ADR-018 |
 
 A context that permits none of these forms MUST use a form approved by the owner and recorded in
@@ -388,9 +403,9 @@ change requires an approved ADR.
 |------|---------|--------|
 | Specification framework | Spec Kit (installed v1.0.1) | Mandatory (Principle I) |
 | Architecture style | Clean-start modular monolith | Default; deviation by approved ADR |
-| Frontend | Next.js **14.2.35** with React 18.3.1 and TypeScript | Owner decision (2026-10-21). Next.js 14.x is Unsupported upstream and has known advisories with no 14.x patch. It is permitted only under the time-boxed security exception X2 recorded in ADR-017, with that ADR's mandatory mitigations. Exact versions are pinned in the lockfile. Another major MUST NOT be adopted without explicit owner approval. Support status and advisories are re-checked at each phase exit |
+| Frontend | Next.js **14.2.35** with React 18.3.1 and TypeScript | Owner preference (2026-10-21); the preference does not make the version supported or secure. Next.js 14.x is Unsupported upstream and has known advisories with no 14.x patch. It is permitted only under the time-boxed security exception X2 recorded in ADR-017, **for development and private demos only**, with that ADR's mandatory mitigations, which are not patches. **Public deployment MUST NOT occur** until the security feasibility gate G-WEB (ADR-017) is reported and the owner decides explicitly. Exact versions are pinned in the lockfile (ADR-022). The version MUST NOT change silently; another version or major MUST NOT be adopted without explicit owner approval. Support status and advisories are re-checked at each phase exit |
 | Backend | Python with FastAPI | Agreed default |
-| Backend runtime | Python 3.12 (3.12.15) | Owner decision (2026-10-21). Dependency resolution on 3.12 verified 2026-10-21 (ADR-022); runtime smoke test in Phase 1. Security-only upstream until 2028-10 |
+| Backend runtime | Python 3.11.x | Owner decision (2026-10-21; supersedes the same-day 3.12.15 wording). A read-only dependency-resolution dry run for 3.11 succeeded on 2026-10-21 (ADR-022). Runtime compatibility is **unverified**, and the exact patch is selected only after a Phase 1 smoke test. Security-only upstream, with end of support in 2027-10 |
 | Background jobs | PostgreSQL-backed job queue inside the system-of-record database; no separate message broker | Agreed default; queue library chosen by ADR |
 | Database migrations | Supabase CLI plain-SQL migrations, version-controlled, with database tests | Agreed default |
 | Authentication | Supabase Auth | Agreed default, subject to security review and ADR |
@@ -400,7 +415,7 @@ change requires an approved ADR.
 | Temporal knowledge graph | Modeled in PostgreSQL, the authoritative system of record | Agreed default |
 | Neo4j | Optional derived graph store | Adopted only after the G-NEO comparison, an approved ADR, and explicit owner approval. No MVP capability, test, or exit criterion may depend on it |
 | Agent orchestration | LangGraph (LangChain where useful) | Agreed default |
-| Model providers | Provider abstraction: DeepSeek, OpenAI, other owner-approved cloud providers, local runtimes, deterministic mock | **DeepSeek (`deepseek-flash`) is the selected primary provider** (owner decision, 2026-10-21). Paid use is limited to the approved $5 prepaid hard cap with no auto-recharge, synthetic data only (ADR-007). Other providers stay configurable; adding or switching a primary needs an ADR and owner approval |
+| Model providers | Provider abstraction: DeepSeek, OpenAI, other owner-approved cloud providers, local runtimes, deterministic mock | **DeepSeek (`deepseek-flash`) is the selected primary provider** (owner decision, 2026-10-21). Its adapter stays disabled until billing, data handling, processing location, and privacy requirements are reviewed and the owner separately authorizes activation. The proposed aggregate paid-testing cap is USD 5, with no auto-recharge, synthetic data only, and paid use only in authorized local development and evaluation runs; CI, nightly evaluations, and demos use the mock or permitted free tiers (ADR-007). Other providers stay configurable; adding or switching a primary needs an ADR and owner approval |
 | Observability | OpenTelemetry traces with correlation identifiers; structured, redacted logs | Agreed default |
 | Secrets | Environment variables locally; secure secret management when deployed | Mandatory (Principle IX) |
 | Local development and deployment | Docker-based local development; production-ready deployment path | Agreed default; deployment target by ADR |
@@ -532,9 +547,10 @@ version. Recording them does not ratify the constitution.
 | 2026-10-20 | No emergency or break-glass path may bypass tenant approval of support access; adding one requires a constitution amendment | Principle III |
 | 2026-10-20 | Support grants: read-only by default, at most four hours, approved by the tenant owner or an authorized tenant administrator, audited; MFA for platform administration | Principle III |
 | 2026-10-21 | Canonical name `Servio`; machine forms `Servio`, `servio`, `SERVIO_`; `servio_ai` kept for the Postgres schema, database roles, and the Python import package; descriptor kept as the tagline; "Servio AI" is historical | Project identity |
-| 2026-10-21 | Next.js 14.2.35 with React 18.3.1 under time-boxed security exception X2 (ADR-017); no other major without explicit owner approval | Technology Baseline |
-| 2026-10-21 | Python 3.12 (3.12.15) confirmed; dependency resolution verified (ADR-022) | Technology Baseline |
-| 2026-10-21 | DeepSeek (`deepseek-flash`) is the selected primary LLM provider; $5 prepaid hard cap, no auto-recharge, synthetic data only, from Phase 1; activation per ADR-007 | Technology Baseline; Principle VIII |
+| 2026-10-21 | Next.js 14.2.35 with React 18.3.1 kept through development under time-boxed security exception X2 (ADR-017), development and private demos only; public deployment only after gate G-WEB and an explicit owner decision; no other version or major without explicit owner approval | Technology Baseline |
+| 2026-10-21 | Python 3.11.x (supersedes the same-day 3.12.15 wording); dependency resolution dry run succeeded; runtime and exact patch unverified (ADR-022) | Technology Baseline |
+| 2026-10-21 | DeepSeek (`deepseek-flash`) is the selected primary LLM provider; adapter disabled until activation is separately approved; proposed USD 5 aggregate paid-testing cap, no auto-recharge, synthetic data only; no paid key in CI, nightly evaluations, or demos (ADR-007) | Technology Baseline; Principle VIII |
+| 2026-10-21 | Browser-exposed frontend variables use `NEXT_PUBLIC_SERVIO_<NAME>` and never carry secrets; the platform database role is `servio_ai_platform_app`, distinct from the `servio_ai_platform` schema (derived names Proposed in ADR-018) | Project identity |
 | 2026-10-21 | PostgreSQL remains the primary system of record; Neo4j remains optional behind G-NEO, an approved ADR, and explicit owner approval (reaffirmed, unchanged) | Principle V; Technology Baseline |
 
 **Amendment history.**
@@ -545,7 +561,7 @@ version. Recording them does not ratify the constitution.
 | 1.1.0 | 2026-10-19 | Canonical name set to Servio AI; clean-start rule; agreed technology defaults; local-first, CPU-only, bilingual, RBAC, and database-layer isolation rules | Proposed; superseded by 1.2.0 before ratification |
 | 1.2.0 | 2026-10-19 | Recorded owner decisions: exact identifier forms (`servio-ai`, `SERVIO_AI_`); English required in the first release; confirmed name, two-layer tenant isolation, and no-GPU requirement | Proposed; superseded by 1.3.0 before ratification |
 | 1.3.0 | 2026-10-20 | Amendments A1–A6: vertical-slice roadmap (Phase 0 + 9 phases); provider data controls and mock fallback; Baseline rows for Python 3.12, job queue, Supabase CLI migrations, OpenTelemetry; supported Next.js LTS; PostgreSQL-first temporal graph with optional Neo4j; platform trust boundary, MFA, support grants, no break-glass | Proposed; superseded by 2.0.0 before ratification |
-| 2.0.0 | 2026-10-21 | B1–B5: canonical name Servio and new identifier forms (`servio_ai` retained); Next.js 14.2.35 + React 18.3.1 under exception X2; Python 3.12 confirmed; DeepSeek primary with $5 cap; open decisions updated; approval-record wording corrected | Proposed; awaiting owner ratification |
+| 2.0.0 | 2026-10-21 | B1–B5: canonical name Servio and new identifier forms (`servio_ai` retained); Next.js 14.2.35 + React 18.3.1 under exception X2 (development and private demos; public deployment gated by G-WEB); Python 3.11.x (revised before ratification from 3.12.15); DeepSeek primary with a proposed USD 5 cap subject to activation approval; open decisions updated; approval-record wording corrected | Proposed; awaiting owner ratification |
 
 **Status**: Proposed. Not ratified; awaiting explicit owner approval.
 
