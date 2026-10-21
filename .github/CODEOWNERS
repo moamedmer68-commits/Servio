@@ -1,0 +1,9 @@
+# ==============================================================================
+# Servio AI — Code Owners Configuration
+# ==============================================================================
+# Global default owner for all files and directories in the repository.
+# Any Pull Request targeting a protected branch with "Require review from
+# Code Owners" enabled must be approved by the owner listed below.
+
+* @moamedmer68-commits
+

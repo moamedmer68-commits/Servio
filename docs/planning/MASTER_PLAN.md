@@ -1,15 +1,16 @@
-# Servio AI — Master Plan
+# Servio — Master Plan
 
-**Servio AI** — Verified Enterprise Reasoning & Intelligent Task Automation System
-**الاسم العربي:** منصة الذكاء المؤسسي للاستدلال الموثق وأتمتة المهام الذكية
+**Servio** — *Verified Enterprise Reasoning & Intelligent Task Automation System* (tagline)
+**Arabic tagline (الشعار العربي):** منصة الذكاء المؤسسي للاستدلال الموثق وأتمتة المهام الذكية. It is a
+tagline only, not an alternative product name; the canonical name is **Servio** in both languages (D45).
 
 | Field | Value |
 |-------|-------|
 | Document | Master Plan (architecture, product specification, roadmap) |
-| Path | `docs/planning/MASTER_PLAN.md` (the only artifact created by the planning assignment) |
-| Version | 0.3.0, **Proposed, awaiting owner approval** |
-| Date | 2026-10-20 |
-| Governing document | `.specify/memory/constitution.md` v1.3.0 (Proposed, unratified; amendments A1–A6 applied) |
+| Path | `docs/planning/MASTER_PLAN.md` (the canonical Master Plan; ADRs live in §6 until approved) |
+| Version | 0.4.0, **Proposed, awaiting owner approval** |
+| Date | 2026-10-21 |
+| Governing document | `.specify/memory/constitution.md` v2.0.0 (**Proposed, unratified**; amendments A1–A6 and B1–B5 applied to the proposed text) |
 | Precedence | Constitution → **Master Plan** → ADRs → phase specs → plans → tasks → implementation |
 | Implementation status | **Not started.** Nothing in this document authorizes implementation. |
 
@@ -20,6 +21,7 @@
 | 0.1.0 | 2026-10-20 | Initial Master Plan from the 2026-10-19/20 planning interview (D1–D17) |
 | 0.2.0 | 2026-10-20 | Owner decisions D18–D28 applied: Next.js moved to a supported LTS (16.x); Supabase PostgreSQL confirmed as the authoritative database; Neo4j made optional behind a comparison gate (G-NEO); Platform Super Admin separated from tenant administration; comprehensive Supervisor Console added to the MVP; all 12 modules retained with per-module MVP scope and deferrals; $0 budget and free-tier limits restated; Market Intelligence starts on synthetic sources; explicit owner-approval policy; hosted demo uses Supabase Cloud Free; migrations move to the Supabase CLI. Decision register added (§0.4). Roadmap becomes phases 0–9. |
 | 0.3.0 | 2026-10-20 | Amendment review: owner decisions D29–D44 recorded (§0.1b). Public GitHub repository; `servio_ai` approved; DeepSeek added as an evaluation candidate with a $5 capped paid spike; 20-day audit and trace retention; real-data pilot gated by a separate review; PostgreSQL-first graph confirmed; support grants and MFA confirmed, with break-glass prohibited by the constitution; demo SLA 1 h / 24 h; one gated $0 live Market Intelligence adapter (supersedes D25); deferral lists approved with two edits. Amendments A1–A6 applied to constitution v1.3.0 (still unratified). Q1, Q2, Q4, Q5, Q6, Q8, Q9, Q10 resolved. |
+| 0.4.0 | 2026-10-21 | Owner decisions D45–D52 recorded (§0.1c). Product renamed **Servio** (`servio_ai` kept for internal schema, role, and package identifiers; Arabic phrase kept as a tagline); browser variables `NEXT_PUBLIC_SERVIO_<NAME>`. Next.js **14.2.35** with React 18.3.1 re-selected under security exception **X2**, limited to development and private demos; public deployment blocked by gate **G-WEB** (ADR-017). Python target changed to **3.11.x** (dependency resolution verified; runtime unverified; ADR-022). **DeepSeek** is the selected primary LLM provider; a minimal provider abstraction and a disabled-by-default DeepSeek adapter move into Phase 1; the Phase 4 spike becomes a validation against the mock baseline. Proposed USD 5 aggregate paid-testing cap with activation approval, 80% review threshold, and no paid key in CI, nightly runs, or demos. Platform DB role renamed `servio_ai_platform_app`. New ADR-022 (runtime and dependency pins). Constitution v2.0.0 (still unratified). Q3 resolved. |
 
 ## How to read this document
 
@@ -44,11 +46,11 @@
 | D5 | **Vertical-slice roadmap**, originally phases 0–8; **extended to phases 0–9** by D22 (new Phase 6 for the consoles). UI is built inside every phase. | Replaces the constitution's 9-phase order. Requires an amendment (A1). |
 | D6 | **Arabic and English both ship in v1.** Arabic is the default (RTL). | Confirms constitution Principle XII. |
 | D7 | ~~**Neo4j Community Edition is in the MVP** as a derived store~~ **Superseded by D20 (2026-10-20).** | Neo4j is now optional and pending the G-NEO comparison gate (ADR-005). |
-| D8 | **LLM budget is strictly $0.** The MVP uses free cloud tiers, local models, and a deterministic mock provider. | ADR-007. Any paid usage needs explicit owner approval. Broadened to all infrastructure by D24. **Bounded exception: D32** ($5 DeepSeek evaluation spike). |
+| D8 | **LLM budget is strictly $0.** The MVP uses free cloud tiers, local models, and a deterministic mock provider. | ADR-007. Any paid usage needs explicit owner approval. Broadened to all infrastructure by D24. **Bounded exception: D32**, amended by **D50** (a proposed USD 5 DeepSeek paid-testing cap that needs activation approval). |
 | D9 | Free tiers that may train on prompts are **allowed only for synthetic data** | Per-tenant `data_classification` gate (ADR-007). |
 | D10 | **Supabase CLI local stack** for local development | ADR-002 and ADR-014 |
 | D11 | Hosted demo on **one always-free VM**, with mitigations. **Amended by D27:** the VM now runs only the application tier (web, API, worker, Caddy). Database, Auth, and Storage run on Supabase Cloud Free. | ADR-015. The laptop is the fallback for live pitches. |
-| D12 | ~~**Keep Next.js 14.2.x**~~ **Superseded by D18 (2026-10-20).** | Exception X2 is withdrawn. |
+| D12 | ~~**Keep Next.js 14.2.x**~~ **Superseded by D18 (2026-10-20).** Next.js 14.2.35 was re-selected by **D47 (2026-10-21)** under a narrower exception X2. | Exception X2 was withdrawn by D18 and reinstated with a narrower scope by D47. |
 | D13 | Demo vertical: **e-commerce and delivery** | Synthetic data and the headline "missing delivery" scenario |
 | D14 | Market Intelligence and Idea Intelligence: **thin MVP**, reusing the RAG and citation layer | One end-to-end workflow each. Reaffirmed by D23 and D25. |
 | D15 | This document is written in **English** | Arabic is used only for names and UI examples. |
@@ -59,7 +61,7 @@
 
 | # | Decision | Consequence |
 |---|----------|-------------|
-| D18 | **Move to a supported Next.js release before implementation.** Do not keep 14.2.x. | Next.js **16.x (Active LTS)** is selected, pinned to the newest 16.x patch at Phase 1 start (16.4.2 on 2026-10-20). 15.x is excluded because its Maintenance LTS window ends about 2026-10-21. X2 is withdrawn. Amendment A4. ADR-017. |
+| D18 | ~~**Move to a supported Next.js release before implementation.** Do not keep 14.2.x.~~ **Superseded by D47 (2026-10-21).** | *Historical:* Next.js **16.x (Active LTS)** was selected, pinned to the newest 16.x patch at Phase 1 start (16.4.2 on 2026-10-20). 15.x is excluded because its Maintenance LTS window ends about 2026-10-21. X2 is withdrawn. Amendment A4. ADR-017. |
 | D19 | **Supabase PostgreSQL is the primary and authoritative database** for all structured application data. Supabase Auth for identity, Supabase Storage for files, Supabase CLI for local development. | ADR-002, ADR-003. No second independent PostgreSQL deployment without an approved ADR. Supabase is not assumed to be secure by default (§6 ADR-002, §9). |
 | D20 | **Neo4j is decided by a technical comparison, not assumed.** Until the comparison is completed and approved, Neo4j is optional and the MVP does not depend on it. | Module D is implemented in PostgreSQL by default. Gate **G-NEO** (ADR-005) runs a proof of concept in Phase 3. Supersedes D7. |
 | D21 | **Tenant administration and Platform Super Admin are both required, with strict separation.** | Platform identities, permissions, and checks are separate from tenant memberships (ADR-019, §3.8). Platform admins get no automatic access to tenant content. |
@@ -79,9 +81,9 @@ with an earlier decision, the owner decided each conflict individually.
 | # | Decision | Consequence |
 |---|----------|-------------|
 | D29 | The GitHub repository `moamedmer68-commits/Servio` is **public**, with strict secret and customer-data controls. Visibility verified as public on 2026-10-20. | Supersedes the Q2 recommendation (private). Public-repo controls in ADR-016 and D44. Commit metadata, including author email, is public. |
-| D30 | The canonical name stays **Servio AI**; "VERITAS AI" remains historical. `servio_ai` is **approved** for the Python import package and the Postgres schema. | Resolves Q1. ADR-018: the `servio_ai` base form is approved; derived names remain Proposed. |
-| D31 | Several LLM providers are evaluated. **DeepSeek is a primary test candidate**, not the selected provider. | Revises Q3. The final provider choice remains open (Phase 4 spike). |
-| D32 | A paid DeepSeek evaluation spike is approved: **$5 prepaid hard cap**, no auto-recharge, Phase 4 spike only, synthetic data only. | Bounded exception to D8 and D24. Activation requires the checks in ADR-007. Any further spend needs new approval. |
+| D30 | ~~The canonical name stays **Servio AI**; "VERITAS AI" remains historical.~~ **Name part superseded by D45 (2026-10-21).** `servio_ai` is **approved** for the Python import package and the Postgres schema (still in force). | Resolves Q1. ADR-018: the `servio_ai` base form is approved; derived names remain Proposed. |
+| D31 | ~~Several LLM providers are evaluated. **DeepSeek is a primary test candidate**, not the selected provider.~~ **Superseded by D49 (2026-10-21).** | *Historical:* revised Q3; the provider choice was left to the Phase 4 spike. |
+| D32 | A paid DeepSeek evaluation spike: **$5 prepaid hard cap**, no auto-recharge, Phase 4 spike only, synthetic data only. **Amended by D50 (2026-10-21).** | Bounded exception to D8 and D24. Scope and status now follow D50: a proposed USD 5 aggregate cap that needs explicit approval before activation. |
 | D33 | The deterministic mock / no-external-LLM fallback is kept. | Made constitutional by A2 (Principle VIII). |
 | D34 | Initial retention: tenant audit events, platform audit events, and trace spans **20 days**, with hash-chain checkpoints. Approval, action, and verification records are kept for the life of the tenant. An explicit review is required before any extension or policy change. | Resolves Q4 (replaces the 90 / 14-day recommendation). §9.3, ADR-012, §11. |
 | D35 | Real customer data may be used in a **future** pilot. **No real data is authorized now.** A pilot requires a separate security, privacy, provider-terms, and retention review. | Resolves Q5. §9.3 pilot readiness review. |
@@ -95,38 +97,62 @@ with an earlier decision, the owner decided each conflict individually.
 | D43 | Constitution amendments A1–A6 approved for application with the reviewed wording. | Applied as constitution v1.3.0 (still Proposed, unratified). |
 | D44 | Public-repository controls are planned: a gitleaks CI workflow, GitHub secret scanning and push protection (owner action), a GitHub noreply commit email (owner action), and `.gitignore` hardening. | Each is a separate task that needs explicit approval. §14. |
 
+### 0.1c Owner decisions recorded in the decision-log review (2026-10-21)
+
+These come from the owner's 2026-10-21 Decision Log (Q1–Q7) and the follow-up instructions. Where
+they conflict with an earlier decision, the earlier one is marked superseded or amended, not
+deleted. **Process (Q1):** the owner intends to ratify constitution v2.0.0 and approve this plan
+v0.4.0 together, as a separate later act. Neither has happened.
+
+| # | Decision | Consequence |
+|---|----------|-------------|
+| D45 | The canonical product name is **Servio**. "Servio AI" becomes historical. The English descriptor and the Arabic phrase are kept as **taglines**, not as alternative product names. `servio_ai` is kept only for internal identifiers: the Postgres schema, database roles, and the Python import package. | **Supersedes the name part of D30.** Constitution identity section (B1), §0.3, ADR-018, and the name sweep across this plan. |
+| D46 | Identifier forms: `Servio` (prose, UI, mixed-case code identifiers), `servio` (lowercase identifiers such as `servio-web`), `SERVIO_<NAME>` (environment variables), and **`NEXT_PUBLIC_SERVIO_<NAME>`** for frontend variables intentionally exposed to browsers (Q6). A `NEXT_PUBLIC_` variable must never carry a secret. | §0.3, ADR-016, ADR-018, §14 inventory. |
+| D47 | **Next.js 14.2.35 with React 18.3.1** is kept through development and is considered for the initial deployment, with an upgrade later (Q3). This is a **preference, not evidence of security**: 14.x is Unsupported upstream and has advisories with no 14.x patch (§2.4). Exception **X2** is reinstated **for development and private demos only**. **Public deployment is blocked** until gate **G-WEB** (ADR-017) presents current primary-source advisories, app-specific exposure, mitigations, alternatives, migration implications, and a recommendation, and the owner decides. No silent version change and no deployment. | **Supersedes D18 and D18-v.** Constitution Frontend row (B2), ADR-017, T3, R3, Phases 1 and 9. |
+| D48 | The Python target is **3.11.x** (owner override, 2026-10-21). This supersedes the same-day proposal of Python 3.12.15. A read-only dependency-resolution dry run succeeded for 3.11 (§2.4). Runtime compatibility is **Unverified**, and no exact patch is selected yet (ADR-022). | Constitution Backend runtime row, ADR-022, §14 toolchain. Python 3.11 security support ends in 2027-10 (R19). |
+| D49 | **DeepSeek is the selected primary LLM provider from the beginning** (default model `deepseek-flash`). The abstraction stays open to OpenAI, other owner-approved providers, local runtimes, and the mock. A minimal `ChatModel` abstraction and a DeepSeek (`openai_compatible`) adapter move into **Phase 1**, **disabled** until billing, data handling, processing location, and privacy requirements are reviewed and the owner separately authorizes activation (Q4). The mock stays for tests and every environment that must not incur paid usage. The Phase 4 spike becomes a **validation of DeepSeek against the mock baseline on `ccrb-v1`**. It must not silently replace the selected provider. Synthetic data only until real-data use is approved after a privacy and security review. | **Supersedes D31; resolves Q3 (provider).** ADR-007, Phases 1 and 4, §11, §12.4. Phase 1 grows from L to XL [EST]. |
+| D50 | Cost controls (Q5): a **proposed USD 5 aggregate paid-testing cap**, shared by Phase 1 smoke tests and Phase 4 validation. It needs **explicit owner approval before paid API activation**. Only authorized local development and evaluation runs may use the paid key. **CI, nightly evaluations, and every demo (private or public) use the mock or permitted free tiers** unless the owner separately authorizes otherwise. When the cap is exhausted, paid calls stop and the system falls back to a labelled degraded or mock mode. Spend is to be tracked in `usage_records`, with an owner review at **80%** of the cap (planned, **not implemented**). Any top-up, auto-recharge, cap increase, or other paid use needs separate explicit approval. No billing was activated and no credits were bought. | **Amends D32.** Principle VIII (paid use needs an approved scope and cap). ADR-007, §11, NFR-5. |
+| D51 | PostgreSQL remains the primary source of truth. Neo4j remains optional and cannot become an MVP dependency without an approved proof of concept (G-NEO), an ADR, and explicit owner approval. Tenant isolation, RLS, RBAC, least privilege, audit logs, human approval for sensitive actions, and the agreed retention controls (D34) are unchanged. | **Reaffirms D19, D20, and D37.** No change to ADR-002, ADR-003, or ADR-005 beyond D52. |
+| D52 | Schemas and roles never share a name. The platform login role becomes **`servio_ai_platform_app`**, while `servio_ai_platform` stays as the platform **schema**. The derived schema and role names stay **Proposed** in ADR-018 and are approved together with this plan. | ADR-003, ADR-018, ADR-019, §7.2, §9.1 T15, §14 inventory. |
+
 ### 0.2 Constitution amendments and exceptions
 
-Amendments A1–A6 were **applied** on 2026-10-20 with `/speckit-constitution` (D43), producing
-constitution **v1.3.0**. The constitution stays **Proposed and unratified** until the owner
-ratifies it. The table below keeps the original rationale; the authoritative wording is in the
-constitution.
+Amendments A1–A6 were **applied to the proposed text** on 2026-10-20 with `/speckit-constitution`
+(D43), producing constitution **v1.3.0**. Amendments B1–B5 (D45–D50) were applied to the proposed
+text on 2026-10-21, producing **v2.0.0**. The constitution stays **Proposed and unratified**
+until the owner ratifies it; applying an amendment is not ratification. The table below keeps the
+original rationale; the authoritative wording is in the constitution.
 
 | ID | Type | Affected section | Change | Why |
 |----|------|------------------|--------|-----|
 | A1 | Amendment (**applied**, v1.3.0) | Delivery Workflow → Roadmap | Replace the 9 phases with the vertical-slice phases 0–9 in §13. Remove the stand-alone "Arabic-First Frontend" phase, because UI is delivered in every phase. Add the Supervisor and Platform Admin Console phase (Phase 6). | D1, D5, and D22. A UI-last order leaves no demo until late and surfaces RTL defects late. |
 | A2 | Amendment (**applied**, v1.3.0) | Principle VIII | Configurable providers: DeepSeek, OpenAI, other owner-approved cloud providers (e.g., Gemini, Groq, OpenRouter free tiers), local runtimes, and a deterministic mock. Each provider declares its data handling (training or service-improvement use, retention, processing location; undeclared = least favorable). Routing refuses providers incompatible with the tenant's data classification. The mock supports every required workflow with no external LLM. Paid usage needs approval with a stated scope and cap. | D8, D9, D31–D33 |
-| A3 | Amendment (**applied**, v1.3.0) | Technology Baseline | Add rows for background jobs (Postgres queue), migrations (**Supabase CLI SQL migrations**, per D28), Python 3.12, and observability (OpenTelemetry). | Resolves open decisions in the constitution. |
-| A4 | Amendment (**applied**, v1.3.0) | Technology Baseline, "Frontend" row | Change "Next.js 14.x with TypeScript" to "A supported Next.js LTS release (Active LTS preferred; currently 16.x) with TypeScript. The version is pinned in the lockfile and reviewed when its support status changes." | D18. The current baseline names an unsupported major version. |
+| A3 | Amendment (applied in v1.3.0; **Python row revised by B3 in v2.0.0**) | Technology Baseline | Add rows for background jobs (Postgres queue), migrations (**Supabase CLI SQL migrations**, per D28), Python 3.12, and observability (OpenTelemetry). | Resolves open decisions in the constitution. |
+| A4 | Amendment (applied in v1.3.0; **superseded by B2 in v2.0.0**, D47) | Technology Baseline, "Frontend" row | Change "Next.js 14.x with TypeScript" to "A supported Next.js LTS release (Active LTS preferred; currently 16.x) with TypeScript. The version is pinned in the lockfile and reviewed when its support status changes." | D18. The current baseline names an unsupported major version. |
 | A5 | Amendment (**applied**, v1.3.0) | Technology Baseline, "Knowledge graph" row | Change "Neo4j" to "Temporal knowledge graph modeled in PostgreSQL by default. Neo4j MAY be added as a derived store only through an approved ADR after the G-NEO comparison." | D20. The current wording names Neo4j as the default. Principle III's list of isolation surfaces ("Neo4j nodes and relationships") stays and applies if Neo4j is adopted. |
 | A6 | Amendment (**applied**, v1.3.0) | Principle III | Platform administration is a separate trust domain; platform roles grant no tenant-content access; MFA is required. Tenant content is reachable only through a support grant: stated reason, tenant owner or authorized admin approval, read-only by default, at most four hours, revocable, audited, using a validated tenant context. No emergency or break-glass path may bypass tenant approval. | D21, D38, D39. Makes the Platform Super Admin model explicit and keeps the rule that tenant context comes from validated membership. |
 | X1 | Exception, **conditional [PENDING G-NEO]** | Principle III ("enforced at both application and database layer") | **Neo4j only, and only if G-NEO approves Neo4j:** isolation is enforced at the application layer, through a single graph repository and network isolation, with no database-layer control. | Neo4j Community has no RBAC or multi-database support (see §2.4). Postgres RLS remains the authoritative boundary. Neo4j would be derived and rebuildable. Not needed if the PostgreSQL graph is chosen. |
-| ~~X2~~ | **Withdrawn** (D18) | — | ~~Run Next.js 14.2.x~~ | The plan now targets a supported Next.js LTS, so no security exception is needed. |
+| B1 | Amendment (applied to proposed v2.0.0, **unratified**) | Preamble, Project identity | Canonical name `Servio`; forms `Servio`, `servio`, `SERVIO_`; `servio_ai` for internal identifiers; "Servio AI" historical | D45, D46 |
+| B2 | Amendment (applied to proposed v2.0.0, **unratified**) | Technology Baseline, "Frontend" row and unsupported-major rule | Next.js 14.2.35 with React 18.3.1 only under the time-boxed exception X2; an unsupported major is allowed only under an approved, time-boxed exception recorded in an ADR | D47 |
+| B3 | Amendment (applied to proposed v2.0.0, **unratified**) | Technology Baseline, "Backend runtime" row | Python **3.11.x** (revised 2026-10-21 from the earlier 3.12.15 wording); dependency resolution verified, runtime unverified | D48 |
+| B4 | Amendment (applied to proposed v2.0.0, **unratified**) | Technology Baseline, "Model providers" row | DeepSeek (`deepseek-flash`) is the selected primary; adapter disabled until activation approval; proposed USD 5 cap | D49, D50 |
+| B5 | Amendment (applied to proposed v2.0.0, **unratified**) | Open decisions, Governance | Open decisions updated; 2026-10-21 decisions recorded; approval-record wording corrected | D45–D51 |
+| X2 | Exception, **reinstated by D47 (2026-10-21)**, time-boxed | Technology Baseline unsupported-major rule; Principle IX (security exceptions) | Run Next.js **14.2.35** (Unsupported upstream; advisories with no 14.x patch) **for development and private demos only**. Mandatory mitigations and review triggers are in ADR-017. Mitigations reduce exposure; they are **not patches**. **Public deployment is not covered**: it is blocked until gate G-WEB and an explicit owner decision. | Owner preference (Q3). It was withdrawn by D18 on 2026-10-20 and reinstated with a narrower scope. |
 
 ### 0.3 Identifier usage (required by the constitution's Project Identity section)
 
 | Form | Where it is used | Examples |
 |------|------------------|----------|
-| `Servio AI` | All prose, UI branding, page titles, prompts, docs | Header logo text, `<title>Servio AI</title>` |
-| `ServioAI` | TypeScript type and namespace prefixes where needed | `ServioAIError` |
-| `servio-ai` | npm package names, Docker image and Compose project names, Neo4j/DB names that need lowercase | `servio-ai-web`, `servio-ai-api`, `servio-ai-worker`, `servio-ai-api-contract`, Compose project `servio-ai` |
-| `SERVIO_AI_` | Every project-defined environment variable | `SERVIO_AI_DATABASE_URL`, `SERVIO_AI_LLM_PROVIDER` |
-| `NEXT_PUBLIC_SERVIO_AI_` | Public browser-exposed frontend variables (ADR-018) | `NEXT_PUBLIC_SERVIO_AI_API_BASE_URL` |
-| `servio_ai` | Python import package and Postgres schema name, **approved by the owner (D30)**, because hyphens are not allowed there (ADR-018) | `import servio_ai`, schema `servio_ai` |
+| `Servio` | All prose, UI branding, page titles, prompts, docs; also mixed-case code identifiers (D45, D46) | Header logo text, `<title>Servio</title>`, `ServioError` |
+| `servio` | npm package names, Docker image and Compose project names, other identifiers that need lowercase | `servio-web`, `servio-api`, `servio-worker`, `servio-api-contract`, Compose project `servio` |
+| `SERVIO_<NAME>` | Every project-defined environment variable | `SERVIO_DATABASE_URL`, `SERVIO_LLM_PROVIDER_CHAIN` |
+| `NEXT_PUBLIC_SERVIO_<NAME>` | Frontend variables **intentionally exposed to browsers** (D46, ADR-018). They must never carry a secret. | `NEXT_PUBLIC_SERVIO_API_BASE_URL` |
+| `servio_ai` | Internal identifiers only: the Python import package and the Postgres schema (**approved by the owner, D30**, retained by D45), plus the derived schemas and roles in ADR-018 (**Proposed**, D52). Never used as the product name. | `import servio_ai`, schema `servio_ai`, role `servio_ai_app` |
 
 Framework-required names keep the names their framework dictates, such as `SUPABASE_*` inside
 the Supabase stack and `NEO4J_AUTH` for the Neo4j image (only if G-NEO adopts Neo4j). These are
-mapped into `SERVIO_AI_*` variables for application code.
+mapped into `SERVIO_*` variables for application code. The Arabic phrase in the header is an
+Arabic tagline and is not an identifier form.
 
 ### 0.4 Decision register
 
@@ -137,8 +163,8 @@ does not move it to *Confirmed*.
 
 | ID | Decision | Status | Rationale | Consequences | Owner approval required |
 |----|----------|--------|-----------|--------------|-------------------------|
-| D18 | Next.js moves off 14.2.x to a supported release | **Confirmed** | 14.x is Unsupported upstream | X2 withdrawn; ADR-017 rewritten; R3 rewritten | Given |
-| D18-v | Target Next.js **16.x Active LTS** (16.4.2 at verification, 2026-10-20), with React 19 and next-intl v4 | **Proposed** (verified against nextjs.org and npm on 2026-10-20) | 16.x is Active LTS. 15.x Maintenance LTS ends about 2026-10-21. next-intl 4.14.9 lists `^16.0.0` as a peer. | Node ≥20.9 required; React 19 component compatibility to check in Phase 1 | Yes (ADR-017, amendment A4) |
+| D18 | ~~Next.js moves off 14.2.x to a supported release~~ | **Superseded by D47** (2026-10-21) | Was: 14.x is Unsupported upstream | — | — |
+| D18-v | ~~Target Next.js 16.x Active LTS (16.4.2), React 19~~ | **Superseded by D47** (2026-10-21) | 16.x remains the supported-version option assessed at gate G-WEB (ADR-017) | — | — |
 | D19 | Supabase PostgreSQL is the authoritative system of record | **Confirmed** | Owner decision; matches the constitution's PostgreSQL and Supabase defaults | ADR-002/003 rewritten around Supabase; one Postgres per environment | Given |
 | D20 | Neo4j is optional until the G-NEO comparison is approved | **Confirmed** (process); **Pending validation** (outcome) | Avoids a second database before value is shown | Module D ships on PostgreSQL; PoC in Phase 3 | Yes, to adopt or reject Neo4j at G-NEO |
 | D21 | Tenant admin and Platform Super Admin are separate trust domains | **Confirmed** | Owner decision | ADR-019, platform tables and roles, support grants | Given; support-grant defaults (Q8) need approval |
@@ -150,9 +176,9 @@ does not move it to *Confirmed*.
 | D27 | Hosted demo uses Supabase Cloud Free | **Confirmed** | Owner choice in the revision interview | ADR-015 rewritten; backups via `supabase db dump` | Given |
 | D28 | Migrations via Supabase CLI SQL | **Confirmed** | Owner choice in the revision interview | Alembic removed; pgTAP for RLS tests | Given |
 | D29 | Public GitHub repository with strict secret and customer-data controls | **Confirmed** | Owner decision; visibility verified public on 2026-10-20 | Supersedes the Q2 recommendation; ADR-016 public-repo controls | Given |
-| D30 | Name stays Servio AI; `servio_ai` for Python import and Postgres schema | **Confirmed** | Owner decision | Resolves Q1; derived names in ADR-018 stay **Proposed** | Given |
-| D31 | DeepSeek is a primary evaluation candidate, not the selected provider | **Confirmed** (candidate); **Open** (final selection) | Owner decision | ADR-007, Phase 4 spike | Yes, for the final provider |
-| D32 | Paid DeepSeek spike, $5 prepaid hard cap, no auto-recharge, synthetic data only | **Confirmed** (budget); **Requires separate approval** (activation) | Bounded exception to D8/D24 | Activation needs verified billing, data-handling, and processing-location terms recorded in §11 | Yes, at activation |
+| D30 | `servio_ai` for Python import and Postgres schema (name part superseded) | **Confirmed** (`servio_ai`); name part **Superseded by D45** | Owner decision | Resolves Q1; derived names in ADR-018 stay **Proposed** | Given |
+| D31 | ~~DeepSeek is a primary evaluation candidate, not the selected provider~~ | **Superseded by D49** (2026-10-21) | — | — | — |
+| D32 | Paid DeepSeek spike, $5 prepaid hard cap, Phase 4 only | **Amended by D50** (2026-10-21) | Bounded exception to D8/D24 | See D50 | See D50 |
 | D33 | Deterministic mock / no-external-LLM fallback | **Confirmed** | Already ADR-007; constitutional by A2 | — | Given |
 | D34 | 20-day retention for tenant audit, platform audit, and traces, with chain checkpoints; decision records kept for the tenant's life | **Confirmed**; checkpoint design **Proposed** | Owner decision | Resolves Q4; §9.3, ADR-012, §11 | Given; extension needs review |
 | D35 | Future real-data pilot only after a separate readiness review; no real data now | **Confirmed**; pilot **Requires separate approval** | Owner decision | Resolves Q5; §9.3 | Yes, before any pilot |
@@ -162,14 +188,23 @@ does not move it to *Confirmed*.
 | D39 | MFA for platform administration | **Confirmed** | Already ADR-019; constitutional by A6 | TOTP on Supabase Free is [UNVERIFIED] | Given |
 | D40 | Demo SLA 1 h first response / 24 h resolution, 24/7 clock, pause while awaiting the customer, same targets for all priorities | **Confirmed**; exact pause states **Proposed** | Owner decision | Resolves Q9; §3.7.3, ADR-020 | Given |
 | D41 | One gated $0 live Market Intelligence adapter in the MVP, synthetic fallback | **Confirmed**; adapter choice **Open**; enablement **Requires separate approval** | Owner decision; supersedes D25 | §3.3a, ADR-021, Phase 7, §11 | Yes, to enable a specific adapter |
-| D42 | Deferral lists approved as written, except the D38 and D41 edits | **Confirmed**, subject to final plan approval | Owner decision | Resolves Q10 | Given |
-| D43 / A1–A6 | Constitution amendments | **Applied** to constitution v1.3.0 (constitution still **Proposed, unratified**) | See §0.2 | Ratification is a separate owner act | Yes, to ratify |
+| D42 | Deferral lists approved as written, except the D38 and D41 edits | **Confirmed** (lists); **plan approval pending** | Owner decision | Resolves Q10 | Given for the lists; the plan itself still needs approval |
+| D43 / A1–A6 | Constitution amendments | **Applied to the proposed text** of v1.3.0 and carried into v2.0.0 (A4 superseded by B2); **not ratified** | See §0.2 | Ratification is a separate owner act | Yes, to ratify |
 | D44 | Public-repo controls: gitleaks CI, push protection, noreply email, `.gitignore` hardening | **Confirmed** (intent); each task **Requires separate approval** | Owner decision | §14 | Yes, per task |
+| D45 | Canonical name Servio; taglines kept; `servio_ai` for internal identifiers | **Confirmed** | Owner decision (2026-10-21) | §0.3, ADR-018, constitution B1 | Given |
+| D46 | Identifier forms incl. `NEXT_PUBLIC_SERVIO_<NAME>` (never secrets) | **Confirmed** | Owner decision (Q6) | ADR-016, ADR-018, §14 | Given |
+| D47 | Keep Next.js 14.2.35 + React 18.3.1 for development; consider for initial deployment; upgrade later | **Confirmed** (preference, dev and private demos under X2); public deployment **Requires separate approval** at G-WEB | Owner decision (Q3); not evidence of security | ADR-017, X2, T3, R3 | Yes, at G-WEB |
+| D48 | Python 3.11.x target | **Confirmed** (minor version); exact patch and runtime compatibility **Pending validation** | Owner override (2026-10-21) of the 3.12.15 proposal | ADR-022 | Given for 3.11.x; the exact patch is routine once verified |
+| D49 | DeepSeek is the selected primary LLM provider; `deepseek-flash` default model; Phase 1 adapter disabled until activation | **Confirmed** (selection); activation **Requires separate approval** | Owner decision (Q4); supersedes D31 | ADR-007, Phases 1 and 4 | Yes, to activate |
+| D50 | USD 5 aggregate paid-testing cap; paid key only for authorized local dev and eval runs; 80% review | Cap **Proposed**; activation, top-up, auto-recharge, or increase **Requires separate approval** | Owner decision (Q5); amends D32 | ADR-007, §11 | Yes, before any paid call |
+| D51 | PostgreSQL primary; Neo4j optional behind G-NEO | **Confirmed** (reaffirmation of D19, D20, D37) | Owner decision | — | Given |
+| D52 | Platform role renamed `servio_ai_platform_app`; derived schema and role names stay Proposed | **Confirmed** (rename); derived names **Proposed** | Owner decision (2026-10-21) | ADR-003, ADR-018, ADR-019 | Yes, with this plan |
 | X1 | Neo4j application-layer isolation exception | **Proposed, conditional** | Only relevant if G-NEO adopts Neo4j | — | Yes, together with G-NEO |
-| X2 | Next.js 14 exception | **Withdrawn** | Superseded by D18 | — | No |
-| ADR-001…021 | Architecture decisions in §6 | **Proposed** | See each ADR | — | Yes |
+| X2 | Next.js 14.2.35 security exception, development and private demos only | **Reinstated by D47** (owner decision 2026-10-21); time-boxed; mitigations are not patches | Owner preference (Q3) | ADR-017 | Re-approval at G-WEB and before any real-data pilot |
+| G-WEB | Public deployment of the web tier (deploy 14.2.35 with mitigations, deploy a 14.2.35 static export, or upgrade to a supported LTS first) | **Pending validation**; **Requires separate approval** | Security feasibility gate in ADR-017 | Blocks any public deployment | Yes |
+| ADR-001…022 | Architecture decisions in §6 | **Proposed** | See each ADR | — | Yes |
 | G-NEO | Neo4j adopt or reject | **Pending validation** | PoC and criteria in ADR-005 | Adds or removes Neo4j scope | Yes |
-| Q3 | Primary LLM (free candidates plus DeepSeek, D31) | **Pending validation** | Phase 4 spike | — | Yes (provider data-handling terms) |
+| Q3 | Primary LLM | **Resolved (provider) by D49**: DeepSeek. Phase 4 validates it against the mock baseline on `ccrb-v1` | Owner decision | Changing the primary needs an ADR update and owner approval | Given (selection); activation separate |
 | SB-ARM | Self-hosted Supabase on ARM64 (fallback only) | **Pending validation** | Not verified officially | Affects the fallback only | No, unless the fallback is activated |
 
 ### 0.5 Owner approval policy (D26)
@@ -189,7 +224,10 @@ recorded owner approval:
 6. Introducing material data-sharing or provider-training risk (for example, sending any
    non-synthetic data to a provider, or enabling a provider whose terms are not approved).
 7. Making a licensing or deployment decision with material consequences (for example, GPL
-   components in a distributed product, or a production hosting target).
+   components in a distributed product, a production hosting target, or **any public deployment
+   of the web tier while exception X2 is in force**, gate G-WEB).
+8. Activating any paid API, buying credits, enabling auto-recharge, or raising a spending cap
+   (D50).
 
 Routine implementation choices inside an approved architecture, such as library minor versions,
 internal module layout, and test tooling, are made by the engineering process, provided they do
@@ -201,23 +239,23 @@ section requires. Silence or elapsed time is never approval.
 
 ## 1. Executive Summary
 
-**What Servio AI is.** Servio AI is a multi-tenant enterprise AI platform. It resolves customer
+**What Servio is.** Servio is a multi-tenant enterprise AI platform. It resolves customer
 cases by assembling evidence from many sources, reasoning only over cited evidence, and acting
 safely. It proposes business actions, enforces policy and human approval, executes only what is
 authorized, and then **independently verifies** each outcome.
 
-**Core differentiator.** Servio AI keeps an unbroken, inspectable chain:
+**Core differentiator.** Servio keeps an unbroken, inspectable chain:
 
 > **evidence → reasoning → decision → action → verified outcome**
 
 Every link is stored, tenant-scoped, and shown in the UI. This chain is the pitch. Most
-"AI agent" products stop at a plausible answer. Servio AI shows *why* it reached the answer,
+"AI agent" products stop at a plausible answer. Servio shows *why* it reached the answer,
 *what* it did, and *proof* that the action happened.
 
 **First demonstrable MVP.** The headline demo uses synthetic e-commerce data in Arabic or English.
 A customer reports a missing delivery.
 
-1. Servio AI assembles a Customer 360 view from three mock sources: the order system, the courier
+1. Servio assembles a Customer 360 view from three mock sources: the order system, the courier
    tracking feed, and the support desk.
 2. It reconstructs the shipment timeline and detects a conflict. The courier says "delivered", but
    the customer and GPS data say otherwise.
@@ -225,7 +263,7 @@ A customer reports a missing delivery.
 4. It proposes two actions:
    - a low-risk follow-up task, which is **auto-executed and verified**
    - a refund, which is **routed to the Approval Center**
-5. After a human approves the refund, Servio AI executes it against the mock payment connector and
+5. After a human approves the refund, Servio executes it against the mock payment connector and
    confirms it with a read-after-write check.
 
 Market Intelligence and Idea Intelligence each demonstrate one cited end-to-end workflow, built
@@ -243,15 +281,20 @@ minimum and an explicit deferral list (§3.3a). The Supervisor Console is part o
 
 **Recommended architecture (summary).**
 
-- **Shape.** A modular monolith (FastAPI plus a worker built from the same codebase) behind a
-  Next.js **16.x (Active LTS)** frontend (D18).
+- **Shape.** A modular monolith (FastAPI on Python 3.11.x plus a worker built from the same
+  codebase) behind a Next.js **14.2.35** frontend with React 18.3.1 (D47). Next.js 14.x is
+  Unsupported upstream; it runs under exception X2 for development and private demos only, and
+  public deployment waits for gate G-WEB (ADR-017).
 - **Data.** **Supabase PostgreSQL** is the authoritative system of record (D19). It uses RLS for
   tenant isolation, pgvector and full-text search for hybrid retrieval, and relational temporal
   edges with recursive queries for the temporal knowledge graph. Neo4j Community is **optional**
   and is considered only as a derived store behind the G-NEO comparison gate (D20).
 - **AI.** LangGraph runs a bounded workflow. Deterministic nodes handle authorization, execution,
   and verification. The LLM is used only for understanding, extraction, assessment, and wording.
-  The full demo also runs with no external LLM, through the deterministic mock provider.
+  **DeepSeek** (`deepseek-flash`) is the selected primary provider (D49). Its adapter ships
+  disabled and is activated only after a review and a separate owner approval, under a proposed
+  USD 5 cap (D50). The full demo also runs with no external LLM, through the deterministic mock
+  provider, which CI, nightly runs, and demos use.
 - **Platform.** Supabase supplies Auth, Storage, and PostgreSQL: the Supabase CLI stack locally
   and Supabase Cloud Free for the hosted demo (D27). The application tier runs on the laptop or on
   one Oracle Always Free VM. The initial demo targets $0 (D24), but free tiers are not permanent
@@ -271,7 +314,7 @@ minimum and an explicit deferral list (§3.3a). The Supervisor Console is part o
 | Constitution | `.specify/memory/constitution.md` v1.2.0 at audit time, **Proposed, not ratified**. Amended to v1.3.0 on 2026-10-20 (A1–A6), still unratified. | [FACT] |
 | Spec Kit artifacts | No `specs/` directory and no feature specs | [FACT] |
 | Node.js | v24.19.0, npm present, pnpm absent | [FACT] |
-| Python | 3.12 (system), 3.11.17 (project `.conda`), `uv` installed | [FACT] |
+| Python | Re-checked 2026-10-21: system `python` is **3.12.4**. uv 0.12.5 manages 3.11.16, 3.12.13, and 3.14.7. The project `.conda` holds **3.11.17**. The target is **3.11.x** (D48), with the exact patch chosen in Phase 1 (ADR-022). | [FACT] |
 | Docker | Docker Desktop 29.7.2 | [FACT] |
 | Git | 2.55.0.windows.3 | [FACT] |
 | Not installed | `psql`, Ollama | [FACT] |
@@ -315,22 +358,32 @@ before the first `/speckit-specify`. This is now satisfied: the owner initialize
 
 - The internals of `.opencode/` were only listed. Its purpose is unknown. It appears to be an
   OpenCode agent configuration and is not used by this plan.
-- How the `.conda/` environment was created and whether it is still needed: [OPEN]. **[REC]** Do
-  not use it for Servio AI. Use a uv-managed Python 3.12 virtual environment instead, so the
-  project folder does not contain a 3.11 interpreter. Removing the environment needs owner
-  approval.
+- How the `.conda/` environment (Python 3.11.17) was created and whether it is still needed:
+  [OPEN]. **[REC]** Do not use it as the project toolchain, even though its minor version matches
+  the 3.11.x target (D48). Use a uv-managed Python 3.11.x virtual environment pinned by
+  `.python-version` and `uv.lock` (ADR-022), so the interpreter is reproducible. Removing the
+  `.conda/` folder needs owner approval.
 - Docker Desktop's WSL2 memory allocation and settings were not inspected. They matter for the
   RAM budget in §12.
 - The CUDA toolkit version and the real throughput of local models on this GPU were not measured.
 - Oracle Cloud account eligibility in the owner's region was not checked.
 
-### 2.4 External facts verified for this plan (accessed 2026-10-20)
+### 2.4 External facts verified for this plan (accessed 2026-10-20; rows marked 2026-10-21 re-checked then)
 
 | Topic | Verified fact | Source |
 |-------|--------------|--------|
-| Next.js support (re-verified 2026-10-20) | **16.x is Active LTS** (released 2025-10-21). 15.x is Maintenance LTS (released 2024-10-21; Maintenance lasts two years from release, so it ends about 2026-10-21). **14.x is Unsupported.** Active LTS gets features, fixes, and security patches. Maintenance LTS gets only critical fixes and essential security updates. | https://nextjs.org/support-policy |
-| Next.js latest stable | `next@16.4.2` (npm `latest` tag). `engines.node >=20.9.0`. Peer `react` / `react-dom`: `^18.2.0 \|\| ^19.0.0`. | https://registry.npmjs.org/next/latest |
-| next-intl | v4.14.9. The peer range for `next` is `^12 \|\| ^13 \|\| ^14 \|\| ^15 \|\| ^16`, so 16.x is supported. | https://registry.npmjs.org/next-intl/latest |
+| Next.js support (re-checked 2026-10-21) | **16.x is Active LTS** (released 2025-10-21). 15.x is Maintenance LTS (released 2024-10-21; Maintenance lasts two years from release, so it ends about 2026-10-21). **14.x is Unsupported** (released 2023-10-26). The policy says only that "in rare circumstances" versions outside LTS may be patched; it promises no security patches for 14.x. | https://nextjs.org/support-policy |
+| Next.js latest stable | `next@16.4.2` (npm `latest` tag). `engines.node >=20.9.0`. Peer `react` / `react-dom`: `^18.2.0 \|\| ^19.0.0`. Relevant to the G-WEB upgrade option. | https://registry.npmjs.org/next/latest |
+| Next.js 14.2.35 (2026-10-21) | npm dist-tag `next-14` = **14.2.35**, published 2025-12-11, the last 14.x release. `engines.node >=18.17.0`. Peers: `react` / `react-dom` `^18.2.0`, optional `@opentelemetry/api`, `@playwright/test`, `sass`. Pinned deps: `@next/env` 14.2.35, `@swc/helpers` 0.5.5, `postcss` 8.4.31, `styled-jsx` 5.1.1. | https://registry.npmjs.org/next/14.2.35 , https://registry.npmjs.org/-/package/next/dist-tags |
+| Next.js advisories affecting 14.x with **no 14.x patch** (2026-10-21) | **CVE-2026-96889 / GHSA-2464-fhr4-w9xw**, Critical (CVSS 4.0 9.5): unauthenticated RCE in the Image Optimization API when SVG files are used. Affected `>=10.0.0 <=15.5.27` and `>16.0.0 <=16.4.0`; patched only in 15.5.28 and 16.4.1. Listed workaround: make sure the `sharp` used by Next.js is `>=0.35.5`. **GHSA-p3m5-59mp-jv5r**, High (8.2), no CVE: DoS in the App Router through Server Actions. Affected `>=13.0.0 <=15.5.27`; patched only in 15.5.28 and 16.4.1; "no workaround exists besides upgrading"; Pages Router apps and apps that do not use Server Actions are stated to be not vulnerable. | GitHub advisory pages for the vercel/next.js repository, read through a fetch tool that returns summaries. **Must be re-confirmed with `npm audit` and the GitHub Advisory Database in Phase 1** (X2 baseline). |
+| Next.js advisories whose listed ranges start at 15.x or 16.x (2026-10-21) | CVE-2026-94545 (next/og RCE, `>=16.2.0 <16.3.6`), CVE-2026-94483 (Image Optimization SSRF, from 16.0.0), CVE-2026-94543 (SSG/ISR cache poisoning, from 15.0.0). 14.x is not listed as affected, but the advisories do not say 14.x is safe. **[UNVERIFIED for 14.x]** | GitHub advisory pages (as above) |
+| next-intl | v4.14.9. The peer range for `next` is `^12 \|\| ^13 \|\| ^14 \|\| ^15 \|\| ^16`, and for `react` it includes `^18.0.0`, so 14.2.35 with React 18 is within range (2026-10-21). | https://registry.npmjs.org/next-intl/latest |
+| Frontend toolchain versions (2026-10-21) | `react` / `react-dom` **18.3.1** (latest 18.x; `latest` is 19.3.1). `typescript` **5.9.3** (latest 5.x; `latest` is 7.0.2, not adopted with Next 14). `@types/react` **18.3.31**, `@types/react-dom` **18.3.7**. `eslint-config-next@14.2.35` peers `eslint ^7.23.0 \|\| ^8.0.0` (ESLint 8 is past its upstream end of life: R20). `tailwindcss` **3.4.19** (`v3-lts` tag; `latest` is 4.3.3). `sharp` latest **0.35.5** (`engines.node >=20.9.0`). | `npm view` and the registry dist-tags |
+| Node.js (2026-10-21) | Installed 24.19.0; the latest 24.x LTS listed is 24.22.1. Next.js 14.2.35 only declares `>=18.17.0`, so running it on Node 24 is **[UNVERIFIED]** (a Phase 1 smoke test). | https://nodejs.org/en/about/previous-releases |
+| Python release status (2026-10-21) | 3.11: **security fixes only, end of support 2027-10**; the latest upstream release is **3.11.17** (2026-10-01), source-only. 3.12: security only, end of support 2028-10. uv's managed builds list 3.11.16 as the newest 3.11 (Windows and Linux). | https://www.python.org/downloads/ , https://www.python.org/downloads/source/ , `uv python list 3.11 --all-versions` |
+| Python 3.11 dependency resolution (2026-10-21, read-only) | `uv pip compile` (no install) of the ADR-022 backend pins for `--python-version 3.11` resolved **60 packages, exit 0**, on both `x86_64-unknown-linux-gnu` and `x86_64-pc-windows-msvc`. The same set had resolved for 3.12. Every listed package declares `requires_python >=3.10` or `>=3.11` (starlette 1.9.0 needs `>=3.11`). **This proves metadata compatibility only, not runtime behavior.** | uv 0.12.5 output, ADR-022 |
+| DeepSeek API pricing (2026-10-21) | `deepseek-flash` (DeepSeek-V4.1-Flash): per 1M tokens, cache-hit input $0.006, cache-miss input $0.30, output $1.20 at peak; off-peak is half. `deepseek-v4-pro`: $0.044 / $1.32 / $3.96 at peak. Context 1M. Peak hours are 01:00–04:00 and 06:00–10:00 UTC, Monday to Friday. Usage is deducted from a topped-up or granted balance (granted first). Prices may change. | https://api-docs.deepseek.com/quick_start/pricing |
+| DeepSeek privacy policy (2026-10-21) | Personal data is collected, processed, and stored **in the People's Republic of China**. User input may be used to train and improve models, with a stated user **opt-out** right. Data is kept while the account exists. The policy says end-user data in apps built on the open platform is the developer's responsibility; it gives no separate API-specific training or retention terms. | https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html |
 | Neo4j editions | Current version 2026.09 (5.26 is LTS). RBAC, clustering, and online backup are Enterprise-only. | https://neo4j.com/docs/operations-manual/current/introduction/ |
 | Neo4j Community licence and databases | GPLv3. Single user database with no RBAC (the official page did not render its edition table, so this is corroborated by community sources). | [PARTIALLY VERIFIED] https://community.neo4j.com/t/neo4j-community-edition-limitations-deep-dive/71005 |
 | Neo4j hardware | Development minimum 2 GB RAM (16 GB+ recommended). Supports x86_64 and ARM64. Java SE 21 or 25. | https://neo4j.com/docs/operations-manual/current/installation/requirements/ |
@@ -356,7 +409,11 @@ the official pages before adoption:
   no-retention.
 - **OpenRouter `:free` models:** 50 requests per day, or 1,000 per day after a lifetime purchase of
   $10 or more. Training policy depends on the upstream provider.
-- **DeepSeek:** pricing, the V4 model naming, and whether any trial credits exist.
+- **DeepSeek:** pricing and the privacy policy were verified on 2026-10-21 (above). Still
+  unverified: whether the API (as opposed to the consumer app) uses inputs for training by
+  default, how to exercise the training opt-out for an API account, whether a hard prepaid limit
+  with auto-recharge disabled is enforced by the platform, and whether any granted balance
+  exists.
 - **Gemini free-tier limits:** Flash-class models are reported at about 10 requests per minute and
   250 per day.
 - **bge-m3:** parameter count (568M vs 1.13B is conflicting) and its Arabic quality. The 1024-dim
@@ -369,7 +426,10 @@ the official pages before adoption:
 - **TOTP MFA on the Supabase Free plan:** believed included (only "advanced MFA" is listed as
   unavailable), but not stated explicitly.
 - **Next.js 16 conventions:** whether `middleware.ts` was renamed (reported as `proxy.ts`) and the
-  default bundler behavior. Verify against the Next.js 16 upgrade guide in the Phase 1 plan.
+  default bundler behavior. Not needed while 14.2.35 is selected; it is input to the G-WEB
+  migration assessment (ADR-017).
+- **Next.js 14.2.35 static export:** whether `output: 'export'` works with next-intl locale
+  routing and the sign-in redirects (Phase 1 spike, ADR-017).
 - **Neo4j Community on ARM64 in Docker and its minimum practical heap** for the PoC dataset.
 
 ---
@@ -477,7 +537,7 @@ MVP completion. **P2** means it is staged after the MVP.
 | **G. Multi-agent orchestration** | LangGraph state machine (§8). Typed state, Postgres checkpoints, budgets, timeouts, cancellation, resume, trace. | The workflow view shows every node, its inputs and outputs (redacted), evidence IDs, timing, and tokens. Cancelling mid-run stops it. Resuming after an interrupt works without repeating side effects. | 4 |
 | **H. Safe actions** | Action catalog with risk class, policy evaluation, approval binding (parameter hash), idempotency keys, mock execution, read-after-write verification, `unknown` reconciliation | The follow-up task auto-executes and shows *verified success*. The refund goes to the Approval Center. Editing the refund amount invalidates the approval. A duplicate submit does not double-execute. A simulated timeout shows *unknown*, then gets reconciled. | 5 |
 | **I. Evaluation and observability** | Benchmark runner, metrics store, Evaluation Lab UI, OpenTelemetry traces, structured redacted logs, cost and usage per tenant, **AI-operations metrics** (latency, errors, fallbacks, tokens when measurable, estimated cost) feeding the Supervisor and Platform consoles | `eval run --suite ccrb-v1 --provider mock` produces a reproducible report. The Evaluation Lab compares 2 runs. Every case run links to its trace. The AI-operations panel shows p50/p95 latency and error counts for the last 24 h, computed from `trace_spans` and `usage_records`. | 4 (tracing), 6 (AI-ops panel), 9 (lab) |
-| **J. Market Intelligence** | Research question, pluggable `ResearchSourceProvider` (MVP: self-written **synthetic** corpus; live providers later behind the same interface, ADR-021), cited synthesis, credibility and freshness, conflicting claims, provenance labels (synthetic, simulated, external), export (Markdown/JSON) | "Compare last-mile delivery competitors in KSA" produces a cited brief from the synthetic corpus, with a conflict section, confidence labels, and a visible "Synthetic sources — not real market evidence" label on the report and on every citation. It can be exported with the label preserved. Re-running with the same corpus version and mock model gives an identical result. **No internet access is needed.** | 7 |
+| **J. Market Intelligence** | Research question, pluggable `ResearchSourceProvider` (MVP: self-written **synthetic** corpus plus **one gated $0 live adapter**, disabled by default and enabled only after verified terms and owner approval, D41; further live providers later behind the same interface, ADR-021), cited synthesis, credibility and freshness, conflicting claims, provenance labels (synthetic, simulated, external), export (Markdown/JSON) | "Compare last-mile delivery competitors in KSA" produces a cited brief from the synthetic corpus, with a conflict section, confidence labels, and a visible "Synthetic sources — not real market evidence" label on the report and on every citation. It can be exported with the label preserved. Re-running with the same corpus version and mock model gives an identical result. **No internet access is needed** on the synthetic path; the live adapter, when enabled, degrades to the labelled synthetic corpus. | 7 |
 | **K. Idea Intelligence** | Structured idea intake, problem and segment analysis, assumptions with evidence, competitor scan (reuses J), risks, configurable transparent scoring, experiments, status tracking | Enter idea "COD verification via WhatsApp". The output has scored criteria with visible weights. Assumptions lacking evidence are labelled *preliminary*. Assumptions supported only by synthetic evidence carry the synthetic label. Moving status to "validating" adds experiments. | 8 |
 | **L. Arabic-first bilingual UI** | AR (RTL, default) and EN (LTR), externalized strings, direction-aware components, locale-aware numbers and dates, all areas listed in the brief §L, including the Supervisor and Platform Admin consoles | Every screen above renders in both locales. Playwright RTL/LTR snapshot and mixed-content checks pass. | 1 (shell), then every phase |
 
@@ -512,8 +572,8 @@ outside the MVP. Moving any item between the two columns requires owner approval
 | NFR-1 | Tenant isolation: zero cross-tenant reads or writes in the negative suite | 100% pass, blocking |
 | NFR-2 | Every LLM workflow is bounded: max steps, LLM calls, tokens, wall clock | ≤25 steps, ≤12 LLM calls, ≤60k tokens, ≤180 s per case run (configurable) |
 | NFR-3 | API latency (non-LLM reads), p95, local | ≤300 ms |
-| NFR-4 | Case analysis latency, p95, with a free cloud model | ≤60 s (displayed with progress) |
-| NFR-5 | The initial demo needs no paid service (D24) and runs with no external LLM, using the mock provider and synthetic data | All CI and eval suites pass offline; the headline demo script passes with `SERVIO_AI_LLM_PROVIDER_CHAIN=mock` |
+| NFR-4 | Case analysis latency, p95, with the selected primary provider (DeepSeek `deepseek-flash`, D49) once activated, or a permitted free-tier fallback otherwise | ≤60 s (displayed with progress) |
+| NFR-5 | The initial demo needs no paid service (D24) and runs with no external LLM, using the mock provider and synthetic data. CI, nightly evaluations, and demos never use the paid key (D50). | All CI and eval suites pass offline; the headline demo script passes with `SERVIO_LLM_PROVIDER_CHAIN=mock`; a test asserts the paid adapter is disabled when no activation flag is set |
 | NFR-6 | Bilingual: no hard-coded user-facing strings | Lint rule enforced |
 | NFR-7 | Accessibility | WCAG 2.1 AA on the core flows (P1) |
 | NFR-8 | Observability: every case run is traceable end to end | 100% of runs have a trace ID shown in the UI |
@@ -548,7 +608,7 @@ outside the MVP. Moving any item between the two columns requires owner approval
 |---|----------|---------------------|-----------|
 | Q1 | Approve the Python import and schema name `servio_ai` (ADR-018) | **Resolved (D30):** approved | Phase 1 |
 | Q2 | Git is initialized. Allow a private remote (GitHub) for CI? | ~~Yes, a private GitHub repo with free Actions minutes~~ **Resolved (D29):** the repository is public, with strict secret and customer-data controls | Before Phase 1 |
-| Q3 | Which LLM is the primary for the demo? | Decide by a Phase 4 spike on the CCRB subset. Candidates are Gemini Flash-class, Groq-hosted open models, OpenRouter `:free`, and **DeepSeek** (D31, via the $5 capped spike, D32). | Phase 4 |
+| Q3 | Which LLM is the primary? | **Resolved (D49):** DeepSeek (`deepseek-flash`), selected from the beginning. Phase 4 validates it against the mock baseline on `ccrb-v1`. Activation needs separate approval (D50). | Activation before any paid call |
 | Q4 | Retention period for audit and traces in the demo (also bounds Free-plan database growth) | ~~90 days for audit, 14 days for traces~~ **Resolved (D34):** 20 days for tenant audit, platform audit, and traces, with chain checkpoints; review before extension | Phase 4 (traces start), confirmed by Phase 9 |
 | Q5 | Are real pilot customers expected before a paid budget exists? | **Resolved (D35):** a future pilot is possible after a separate security, privacy, provider-terms, and retention review; no real data now | Before any pilot |
 | Q6 | Brand and visual identity (logo, colours, font) | **Resolved (D36):** neutral styling and an open-source Arabic-capable font (IBM Plex Sans Arabic or Noto Sans Arabic, chosen in the Phase 1 plan) | Phase 1 |
@@ -581,7 +641,7 @@ member and a platform admin works in two separate session contexts (the platform
 | 5 | Agent workflow monitoring | Runs by status (running, waiting for approval, waiting for clarification, failed, budget-exceeded, cancelled), retries, handoffs (clarify and escalate), link to the run trace | `console.ops.read`; trace detail needs `evidence.read` | 4 (run list), 6 (monitor) |
 | 6 | Human approval center | Pending, approved, rejected, expired, invalidated, and failed-execution approvals; parameters, evidence, risk, policy version, history; decide in place | view: `console.ops.read`; parameters: `approvals.decide` or `actions.propose`; decide: `approvals.decide` | 5 |
 | 7 | Team workload and performance | Open cases per assignee, cases resolved, median time to resolution, SLA attainment, reopen rate (definitions in §3.7.3) | `reports.team.read` | 6 |
-| 8 | AI operations monitoring | LLM call latency p50/p95, error and fallback counts, degraded-mode time, tokens when the provider reports them, estimated cost at list price (always $0 actual in the MVP) | `ai_ops.read` | 6 |
+| 8 | AI operations monitoring | LLM call latency p50/p95, error and fallback counts, degraded-mode time, tokens when the provider reports them, estimated cost at list price, and actual paid spend against the cap (zero unless authorized DeepSeek runs occurred, D50) | `ai_ops.read` | 6 |
 | 9 | Knowledge-source and connector health | Last run status and time per connector, failure counts, embedding backlog, documents failing parsing, graph projection lag (and Neo4j sync lag if adopted) | `console.ops.read` | 2 (connectors), 3 (knowledge), 6 (panel) |
 | 10 | Audit and governance views | Audit log search, hash-chain verification status, policy versions in force, support-grant history | `audit.read` | 1 (audit list), 6 (governance) |
 | 11 | Usage and operational reports | Period reports (cases, actions by outcome, approvals by decision, tokens, storage), CSV and Markdown export | `usage.read` or `reports.team.read` per report | 6 |
@@ -623,7 +683,7 @@ sources, and filtered by a time window (default: last 7 days). Each definition i
 | LLM latency p50/p95 | `trace_spans` (LLM spans) | percentiles of span duration | `ai_ops.read` | "No data" |
 | LLM errors and fallbacks | `trace_spans`, `usage_records` | count of failed LLM spans; count of fallback events | `ai_ops.read` | 0 is valid |
 | Tokens | `usage_records` (`kind = llm_tokens`) | sum of provider-reported tokens | `ai_ops.read` | "Not measured" when the provider reports none |
-| Estimated cost | `usage_records` | Σ tokens × configured list price; actual spend is shown separately as $0 | `ai_ops.read` | "Not measured" if no price is configured |
+| Estimated cost | `usage_records` | Σ tokens × configured list price; actual paid spend is shown separately from paid-provider usage records ($0 while the paid adapter is disabled) | `ai_ops.read` | "Not measured" if no price is configured |
 | Connector health | `connector_runs` | last status, last success time, failures in window | `console.ops.read` | "Never run" |
 | Embedding backlog | `jobs` (`kind = embed`) | pending count, oldest age | `console.ops.read` | 0 is valid |
 
@@ -721,9 +781,9 @@ flowchart LR
     U["Tenant users<br/>owner, admin, supervisor, approver,<br/>operator, analyst, viewer"]
     PADM["Platform staff<br/>platform_super_admin, platform_operator"]
     INV["Investor / demo viewer"]
-    S["Servio AI platform"]
+    S["Servio platform"]
     SB["Supabase: PostgreSQL (system of record),<br/>Auth, Storage<br/>local CLI stack / Cloud Free (demo)"]
-    LLM["LLM providers<br/>free cloud tiers / local runtime / mock"]
+    LLM["LLM providers<br/>DeepSeek (primary, gated) / free tiers /<br/>local runtime / mock"]
     SRC["Business systems<br/>MVP: mock connectors + synthetic data"]
     RES["Research sources<br/>MVP: synthetic corpus; live providers later"]
     U -->|HTTPS, AR/EN UI| S
@@ -739,17 +799,17 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    subgraph WEB["apps/web (Next.js 16.x LTS, servio-ai-web)"]
+    subgraph WEB["apps/web (Next.js 14.2.35 under X2, servio-web)"]
         UI["Feature screens + Supervisor Console<br/>+ Platform Admin Console<br/>AR/EN, RTL/LTR"] --> APICL["Typed API client<br/>generated from OpenAPI"]
         AUTHC["Supabase sign-in only"]
     end
-    subgraph API["apps/api (FastAPI, servio-ai-api)"]
+    subgraph API["apps/api (FastAPI, servio-api)"]
         R["HTTP routers /api/v1 (tenant)<br/>/api/v1/platform (platform)"] --> MW["Auth + tenant or platform context<br/>+ idempotency + tracing"]
         MW --> DOM["Domain modules<br/>identity, platform_admin, customers, connectors, knowledge,<br/>graph, cases, policies, actions, approvals, workflows,<br/>market_intel, idea_intel, evaluation, reporting, audit, usage"]
         DOM --> PLAT["Platform layer<br/>db session with SET LOCAL tenant, jobs queue,<br/>outbox, config, logging, errors"]
         DOM --> PROV["Provider adapters<br/>llm, embeddings, rerank, storage, research"]
     end
-    subgraph WRK["servio-ai-worker (same codebase)"]
+    subgraph WRK["servio-worker (same codebase)"]
         J["Job runner<br/>ingestion, embeddings, graph projection,<br/>workflow runs, eval runs, reconciliation,<br/>support-grant expiry"]
     end
     PG[("Supabase PostgreSQL + pgvector<br/>authoritative system of record, RLS,<br/>temporal graph edges")]
@@ -874,9 +934,9 @@ flowchart TB
     end
     subgraph VM["Hosted demo app tier: Oracle Always Free A1 (2 OCPU / 12 GB, ARM64)"]
         CADDY["Caddy reverse proxy, TLS"]
-        APIV["servio-ai-api"]
-        WRKV["servio-ai-worker + embedding model (CPU)"]
-        WEBV["servio-ai-web (next start)"]
+        APIV["servio-api"]
+        WRKV["servio-worker + embedding model (CPU)"]
+        WEBV["servio-web (next start, or a static export;<br/>public exposure only after G-WEB)"]
         CADDY --> WEBV
         CADDY --> APIV
     end
@@ -884,7 +944,7 @@ flowchart TB
     WRKV -->|TLS| SBDB
     APIV -->|JWT verify, signed URLs| SBAUTH
     APIV --> SBST
-    APIV -->|HTTPS| FREE["Free cloud LLM tier<br/>or mock"]
+    APIV -->|HTTPS| FREE["Mock or permitted free LLM tier<br/>(no paid key on demos, D50)"]
     FB["Fallbacks: self-hosted Supabase on the VM;<br/>whole stack on the laptop"] -.-> VM
 ```
 
@@ -909,9 +969,9 @@ Tooling:
 ### 5.2 Proposed directory tree (do **not** create during planning)
 
 ```text
-D:\Servio\                                  repository root (Compose project "servio-ai")
+D:\Servio\                                  repository root (Compose project "servio")
 ├── apps/
-│   ├── web/                                servio-ai-web: Next.js 16.x (Active LTS) App Router, React 19, TypeScript
+│   ├── web/                                servio-web: Next.js 14.2.35 (X2) App Router, React 18.3.1, TypeScript 5.9
 │   │   ├── messages/{ar,en}.json           all UI strings (next-intl); keys checked in CI
 │   │   ├── src/
 │   │   │   ├── app/[locale]/               locale segment; <html lang dir> set per locale
@@ -928,10 +988,10 @@ D:\Servio\                                  repository root (Compose project "se
 │   │   │   ├── lib/api/                    thin wrapper over generated client; error mapping
 │   │   │   ├── lib/auth/                   Supabase sign-in + session → Bearer token (only SDK use)
 │   │   │   ├── lib/i18n/                   locale config, formatters (numbers, dates, currency)
-│   │   │   └── middleware.ts               locale routing + auth redirect (no authorization decisions);
-│   │   │                                   file name per the Next.js 16 convention (reported as proxy.ts) [verify in Phase 1]
+│   │   │   └── middleware.ts               locale routing + auth redirect only (Next.js 14 convention);
+│   │   │                                   never an authorization boundary (ADR-017)
 │   │   └── tests/{e2e,component}/          Playwright (AR+EN projects), Vitest
-│   └── api/                                servio-ai-api: FastAPI + worker; Python package servio_ai
+│   └── api/                                servio-api: FastAPI + worker; Python package servio_ai
 │       ├── pyproject.toml
 │       ├── src/servio_ai/
 │       │   ├── main.py                     ASGI app factory
@@ -947,9 +1007,10 @@ D:\Servio\                                  repository root (Compose project "se
 │       │   │   ├── market_intel/  idea_intel/  evaluation/  reporting/{kpis.py,views}
 │       │   │   └── <module>/{router.py,service.py,repository.py,models.py,schemas.py,errors.py}
 │       │   └── providers/{llm,embeddings,rerank,storage,research}/   interface + adapters
+│       │                                   (llm/: ChatModel interface, mock, openai_compatible for DeepSeek; Phase 1)
 │       └── tests/{unit,integration,security,workflows}/
 ├── packages/
-│   └── api-contract/                       servio-ai-api-contract: openapi.json snapshot + generated TS
+│   └── api-contract/                       servio-api-contract: openapi.json snapshot + generated TS
 ├── data/
 │   ├── synthetic/                          versioned generators + seeds (tenants "Souq Al-Noor", "Rafeeq Express")
 │   └── research-corpus/                    synthetic market corpus (self-written; every item labelled synthetic)
@@ -1021,7 +1082,12 @@ just test         # unit + integration (+ security) ; just test-db (supabase tes
 These ADRs live here until they are approved. After approval each one is extracted to
 `docs/adr/ADR-NNN-<slug>.md`, which becomes the single ADR location the constitution requires.
 Each ADR follows this format: **Context / Alternatives / Decision / Rationale & trade-offs /
-Cost / Reconsider when**.
+Cost / Reconsider when**. ADRs with unresolved items end with an **Open items** line giving the
+recommendation and the approval needed.
+
+**Open item (ADR storage location, a constitution open decision):** the recommendation is §6 of
+this plan until approval, then `docs/adr/`. It is approved together with this plan; no files are
+extracted before then.
 
 ### ADR-001: Modular monolith in a monorepo
 - **Context:** One developer, a startup pitch, and 12 modules. Constitution Principle II sets this
@@ -1118,9 +1184,9 @@ Cost / Reconsider when**.
      role with an audited, minimal grant.
   6. Repository methods require a `TenantContext` argument. A unit test asserts that no
      repository query omits it.
-  7. **Platform scope** (ADR-019): platform tables live in the `servio_ai_platform` schema and are
-     reached through a separate `servio_ai_platform` role. That role has **no** grants on tenant
-     content tables. Cross-tenant figures come only from `SECURITY DEFINER` functions that return
+  7. **Platform scope** (ADR-019): platform tables live in the `servio_ai_platform` **schema** and
+     are reached through a separate `servio_ai_platform_app` **login role** (D52). That role has
+     **no** grants on tenant content tables. Cross-tenant figures come only from `SECURITY DEFINER` functions that return
      counts, sizes, and statuses, never content. The `tenants` registry row is readable by
      tenant members (their own tenant, via RLS) and by the platform role.
   8. pgTAP tests in `supabase/tests/` assert: every tenant table has RLS enabled and forced; each
@@ -1134,6 +1200,12 @@ Cost / Reconsider when**.
 - **Cost:** $0.
 - **Reconsider when:** an enterprise customer requires physical isolation, which would mean a
   database per tenant for that tier.
+- **Open items:**
+  - The Supabase pooler mode and the driver's prepared-statement settings with `SET LOCAL`
+    [UNVERIFIED]. Recommendation: transaction-scoped settings over a session-mode or direct
+    connection, verified in the Phase 1 plan.
+  - The mechanism itself is a constitution open decision. It is approved with this plan (ADR-003
+    is Proposed). A deviation that weakens either layer needs owner approval (§0.5, item 4).
 
 ### ADR-004: pgvector + Postgres full-text for hybrid retrieval (no external vector DB)
 - **Alternatives:** Qdrant, Weaviate, Elasticsearch/OpenSearch.
@@ -1234,15 +1306,50 @@ Cost / Reconsider when**.
   checkpoints and interrupts).
 - **Reconsider when:** LangGraph becomes a blocker for tenant-scoped persistence.
 
-### ADR-007: Model provider abstraction, $0 policy, and data-classification gate
+### ADR-007: Model provider abstraction, DeepSeek primary, activation gate, and data-classification gate
+- **Context:** D49 selects DeepSeek as the primary LLM provider from the beginning (supersedes
+  D31). D50 sets cost controls (amends D32). Constitution Principle VIII requires declared data
+  handling, a classification gate, a no-external-LLM fallback, and approved scope and cap for any
+  paid use.
 - **Decision:**
   - The interfaces are `ChatModel` (structured output via a JSON schema, tool calling optional),
     `EmbeddingModel`, and `Reranker`.
+  - **Phase 1 scope (D49, Q4):** a minimal `ChatModel` interface, the `mock` adapter, the
+    `openai_compatible` adapter configured for DeepSeek, the data-classification gate, and a smoke
+    test. The DeepSeek adapter is **disabled by default** (`SERVIO_DEEPSEEK_ENABLED=false`).
+    The smoke test runs against the mock unless activation has been approved.
   - The adapters are:
-    - `mock`: deterministic and fixture-driven, the default for tests and CI
-    - `ollama` / `llamacpp`: local
-    - `openai_compatible`: covers Groq, OpenRouter, DeepSeek, and OpenAI via `base_url`
-    - `gemini`
+    - `mock`: deterministic and fixture-driven, the default for tests, CI, nightly runs, and demos
+    - `openai_compatible`: **DeepSeek (primary, default model `deepseek-flash`)**; the same
+      adapter covers OpenAI, Groq, and OpenRouter via `base_url` if the owner approves them
+    - `ollama` / `llamacpp`: local (Phase 4)
+    - `gemini`: optional free-tier fallback (Phase 4)
+  - **Activation gate (DeepSeek).** The adapter is enabled only after all of these are recorded
+    in §11, followed by a **separate explicit owner approval** that states the scope and the cap:
+    1. billing model, including whether the platform enforces a prepaid limit with auto-recharge
+       off [UNVERIFIED]
+    2. data handling: training or service-improvement use of API inputs and the opt-out
+       procedure, exercised on the account before first use [UNVERIFIED for the API]
+    3. processing location (the PRC, per the privacy policy verified on 2026-10-21) and its
+       acceptability for synthetic data
+    4. retention terms
+    5. any other applicable privacy requirement
+  - **Cost controls (D50).** These are proposals. **Usage tracking is planned, not
+    implemented.**
+    - The proposed aggregate paid-testing cap is **USD 5**, shared by the Phase 1 smoke tests and
+      the Phase 4 validation. No top-up, auto-recharge, cap increase, or other paid use without
+      separate approval.
+    - The paid key is read only by authorized **local development and evaluation runs**. CI,
+      nightly evaluations, and every demo use `mock` or a permitted free tier. A config check
+      refuses the DeepSeek adapter when `SERVIO_ENV` is `ci` or `demo`.
+    - Every paid call writes a `usage_records` row (`kind = llm_spend_usd`, provider-reported
+      tokens, list-price cost). At **80%** of the cap the adapter stops and asks for an owner
+      review. At 100%, paid calls stop.
+    - On exhaustion or adapter failure, the run falls back to the labelled degraded or mock mode,
+      and the UI shows the degraded banner.
+  - **Phase 4 (D49):** a **validation** of DeepSeek against the mock baseline (B0) on `ccrb-v1`,
+    with synthetic data only. It does not reopen the provider choice; changing the primary needs an
+    ADR update and owner approval.
   - Each configured provider declares `may_train_on_inputs` (training or service improvement),
     `data_retention`, `processing_location`, `rate_limits`, `supports_tools`,
     `supports_json_schema`, `max_context`, and `cost_per_1k` (0 for free). An undeclared
@@ -1251,15 +1358,14 @@ Cost / Reconsider when**.
     whose declared data handling is incompatible with the tenant's classification, including any
     provider with `may_train_on_inputs=true` for `real` tenants. In the MVP every tenant is
     `synthetic`, and no real data is authorized (D35).
-  - **DeepSeek (D31, D32)** is a primary evaluation candidate, configured through the
-    `openai_compatible` adapter. It is evaluated in the Phase 4 spike under a **$5 prepaid hard
-    cap** with no auto-recharge and synthetic data only. Before any top-up, the billing model,
-    data-handling terms, and processing location are verified on DeepSeek's official pages and
-    recorded in §11. The API key lives only in the environment (`SERVIO_AI_*`), never in the
-    repository. Spend beyond $5 needs new owner approval. DeepSeek is **not** the selected
-    provider until the spike results are reviewed and the owner decides (Q3).
-  - A fallback chain is configured, for example `gemini-free → groq-free → local → mock`. The UI
-    shows a **degraded-mode** banner whenever a fallback is used.
+  - **DeepSeek data class:** DeepSeek declares `processing_location = PRC`. Until the API terms are
+    verified, `may_train_on_inputs` is treated as `true` (least favorable). It may therefore
+    receive **synthetic data only**. Real-data use needs a privacy and security review and owner
+    approval (D35). The API key lives only in the environment (`SERVIO_DEEPSEEK_API_KEY`), never
+    in the repository or a `NEXT_PUBLIC_` variable.
+  - Provider chains: authorized local runs use `deepseek → local → mock`. CI, nightly runs, and
+    demos use `mock`, or `gemini-free → groq-free → mock` where those free tiers are permitted.
+    The UI shows a **degraded-mode** banner whenever a fallback is used.
   - **No-LLM demo mode:** with the chain set to `mock` only, the whole headline demo, the Supervisor
     Console, and the Market and Idea workflows still run, on fixture-driven outputs labelled
     "Deterministic demo mode". This is the guaranteed $0 path (NFR-5, D24).
@@ -1271,11 +1377,22 @@ Cost / Reconsider when**.
     Ollama. GPU is used when available; CPU otherwise. A lighter fallback such as
     `multilingual-e5-small` [UNVERIFIED size/quality] is available for the 12 GB VM if needed.
     Changing the embedding model requires a full re-embed. Each vector row stores `embedding_model`.
-- **Rationale:** Meets the $0 rule while keeping quality acceptable. Reproducible evaluation is
-  possible offline.
-- **Cost:** $0. Paid usage needs owner approval (constitution Governance).
-- **Reconsider when:** free-tier limits block the demo or a real-data pilot is planned. The plan
-  then switches to a paid no-training tier.
+- **Rationale:** DeepSeek gives the best verified price for the primary provider. The disabled
+  adapter, the activation gate, and the mock keep the $0 path (D24) and Principle VIII intact.
+  Reproducible evaluation is possible offline.
+- **Cost:** $0 until activation. After activation, at most the approved cap (proposed USD 5).
+  Any further paid usage needs owner approval (constitution Principle VIII, §0.5 item 8).
+- **Reconsider when:** the Phase 4 validation misses the targets in §10.2, DeepSeek terms or
+  prices change, or a real-data pilot is planned (that needs a no-training tier).
+- **Open items:**
+  - DeepSeek activation (the five checks above). Approval: explicit owner approval with scope
+    and cap.
+  - The embedding model (a constitution open decision). Recommendation: local `bge-m3`, with
+    `multilingual-e5-small` as the lighter fallback, confirmed in the Phase 3 plan.
+  - The local model runtime (a constitution open decision). Recommendation: Ollama on Windows
+    for the GPU, `llama.cpp` as the alternative, decided in the Phase 4 plan.
+  - The embedding model and local runtime are routine engineering choices unless they add a paid
+    service or send data externally (§0.5).
 
 ### ADR-008: Connector framework
 - **Decision:** Connectors use an async Python `Protocol`:
@@ -1309,6 +1426,10 @@ Cost / Reconsider when**.
 - **Rationale:** No extra infrastructure, transactional enqueue (the same transaction as the
   outbox), and RLS-aware.
 - **Reconsider when:** throughput exceeds ~50 jobs per second.
+- **Open items:** the queue library (a constitution open decision). Recommendation: start with
+  the hand-written `SKIP LOCKED` queue, and adopt `procrastinate` or `pgmq` only if verified
+  available on the local stack and on Free. Decided in the Phase 2 plan. It is a routine choice
+  unless it adds infrastructure (§0.5, item 3).
 
 ### ADR-010: Postgres ↔ Neo4j synchronization (transactional outbox) [PENDING G-NEO]
 - **Status:** Proposed, **conditional**. It applies only if G-NEO adopts Neo4j (ADR-005). With the
@@ -1390,7 +1511,11 @@ Cost / Reconsider when**.
     slot stays unused, or is used for a staging copy.
   - **App tier:** a single A1 VM running Ubuntu LTS, Docker Compose, Caddy (automatic TLS), the
     API, the worker, and the web app. Neo4j is not deployed unless G-NEO adopts it.
-  - No local LLM runs on the VM. It uses free cloud tiers plus the mock fallback.
+  - No local LLM runs on the VM. It uses the mock provider or permitted free tiers; the paid
+    DeepSeek key is never deployed to the demo (D50).
+  - **The web tier is not exposed publicly** while exception X2 is in force, until gate G-WEB
+    (ADR-017) is decided by the owner. Before G-WEB, demos are private: the laptop, or the VM
+    behind access control.
   - The embedding model runs on CPU on the VM.
   - **Mitigations:**
     1. **Pausing:** a demo-day checklist restores the Supabase project from Studio if it is paused
@@ -1412,6 +1537,10 @@ Cost / Reconsider when**.
   the VM (IPv4/IPv6) [UNVERIFIED]; ARM64 images for the self-host fallback [UNVERIFIED].
 - **Not production:** this topology is for the demo only. Production needs paid backups, PITR,
   no pausing, monitoring, and a support plan, which require owner approval (§11).
+- **Open items:** the cloud demo target is proposed here; the production hosting target is a
+  constitution open decision. Recommendation: decide production hosting in a future ADR before
+  any real-data pilot. Approval: owner (§0.5, item 7). Public exposure of the demo also needs
+  G-WEB.
 
 ### ADR-016: Secrets and credential handling
 - **Decision:**
@@ -1421,8 +1550,12 @@ Cost / Reconsider when**.
     manager"].
   - Connector credentials are encrypted at rest with an application key (AES-GCM via
     `cryptography`) referenced by `credential_ref`, and never returned by the API.
-  - Only `NEXT_PUBLIC_SERVIO_AI_*` and the Supabase anon (publishable) key reach the browser. The
-    Supabase `service_role` key and database passwords exist only in backend and CI secrets.
+  - Only `NEXT_PUBLIC_SERVIO_<NAME>` variables (D46) and the Supabase anon (publishable) key reach
+    the browser. A `NEXT_PUBLIC_` variable must never hold a secret. A CI bundle check fails on
+    any `NEXT_PUBLIC_` name containing `KEY`, `SECRET`, `TOKEN`, or `PASSWORD`, except the
+    allow-listed anon key. The Supabase `service_role` key, the DeepSeek key, and database
+    passwords exist only in backend and CI secrets, and the DeepSeek key is excluded from CI
+    (D50).
   - On the hosted demo, Supabase project secrets are stored in the VM `.env` (root, `0600`) and in
     the CI secret store for `supabase db push`, never in the repository.
   - **Public repository controls (D29, D44).** The repository is public, so everything committed,
@@ -1439,47 +1572,131 @@ Cost / Reconsider when**.
     - Vulnerability details go through private GitHub security advisories, not public documents.
     - If a secret is ever committed, it is revoked and rotated first. A history rewrite is
       considered only with explicit owner approval.
+- **Open items:** the deployed secret manager (a constitution open decision). Recommendation:
+  keep the root-owned `0600` `.env` for the private demo, and choose a managed secret store in
+  the production ADR. Approval: owner, before production or any real-data pilot.
 
-### ADR-017: Frontend framework version policy, i18n, and RTL
-- **Version policy (D18):**
-  - Use a Next.js major that is in **Active LTS** at the start of each phase. Maintenance LTS is
-    acceptable only while at least 6 months of support remain. Unsupported majors are not
-    allowed. No canary or experimental releases.
-  - **Selected:** Next.js **16.x**, pinned exactly in the lockfile to the newest 16.x patch at the
-    start of Phase 1 (`16.4.2` on 2026-10-20, verified on npm and nextjs.org/support-policy).
-    React 19 (`next@16` peers allow `^18.2.0 || ^19.0.0`; React 19 is the target).
-  - Patch releases are applied within 7 days for security fixes. The support status is
-    re-checked at every phase exit and recorded in the phase report.
-  - A new major is adopted through a short ADR update with owner approval if it changes the
-    deployment or security posture.
-- **Decision:**
-  - Next.js 16.x with the App Router and **next-intl v4** (4.14.9 lists `^16.0.0` as a peer).
-    Routes are `/ar/...` (default) and `/en/...`.
+### ADR-017: Frontend framework version, security exception X2, public-deployment gate, i18n, and RTL
+- **Context:** The owner prefers to keep Next.js 14.2.35 through development, to consider it for
+  the initial deployment, and to upgrade later (D47, Q3). The constitution allows an unsupported
+  major only under an approved, time-boxed security exception recorded in an ADR. **The owner's
+  preference is not evidence that 14.2.35 is supported or secure.** It is Unsupported upstream
+  and has advisories with no 14.x patch (§2.4).
+- **Selected version (D47):** `next` **14.2.35** with `react` and `react-dom` **18.3.1**, pinned
+  exactly (ADR-022). The version must not change silently: another version or major needs
+  explicit owner approval. No canary or experimental releases.
+- **Exception X2 (scope and conditions):**
+  - **Scope:** development and **private** demos only, meaning the laptop, or the VM behind access
+    control with no public URL. **Public deployment is not covered.**
+  - **Known exposure (2026-10-21, to be re-confirmed by `npm audit` in Phase 1):**
+    CVE-2026-96889 (Critical RCE, Image Optimization with SVG) and GHSA-p3m5-59mp-jv5r (High DoS,
+    Server Actions). Both have **no 14.x patch**.
+  - **Mandatory mitigations.** These reduce exposure; **they are not patches** and do not make
+    14.2.35 secure:
+    1. Image optimization off (`images.unoptimized: true`), no `images.remotePatterns`,
+       `dangerouslyAllowSVG` left false, and `sharp`, if installed, at `>=0.35.5` (the
+       advisory's listed workaround [UNVERIFIED on 14.2.35]).
+    2. **No Server Actions:** a lint rule rejects `"use server"`. All mutations go through the
+       FastAPI API.
+    3. No authorization in Next.js middleware. Middleware handles only locale routing and sign-in
+       redirects. All authorization is in the API (T3). Caddy strips `x-middleware-subrequest`
+       and other internal headers.
+    4. No secrets in the frontend (ADR-016), CSP headers, and Caddy in front with strict header
+       handling.
+    5. Outbound network access from the web container is blocked except to the API. The web
+       container holds no `.env` secrets.
+    6. Caddy rate-limits anonymous POST requests.
+    7. `npm audit` and an advisory check run in CI and at every phase exit, compared against the
+       recorded X2 baseline.
+  - **Review triggers:** a new Critical or High advisory affecting 14.x with no workable
+    mitigation (work on the affected surface stops and the owner decides); any real-data pilot;
+    any proposal to expose the web tier publicly (G-WEB); each phase exit (support status and
+    advisories recorded in the phase report).
+- **Gate G-WEB: public-deployment security feasibility.** Required before **any** public
+  deployment, and at the latest before the Phase 9 hosted demo.
+  - **Preliminary assessment (2026-10-21):** a secure public deployment on 14.2.35 is **not
+    demonstrated**, and cannot be shown by version alone. Self-hosted `next start` on the VM is
+    the exposure that matters, because it lacks the platform-level header sanitizing a managed
+    host may add.
+  - **Report:** the gate report presents:
+    1. the current advisory list from primary sources (`npm audit`, the GitHub Advisory Database)
+    2. the exploitability of each advisory for this app (App Router, middleware, image optimizer,
+       Server Actions)
+    3. the mitigations in place
+    4. the alternatives, migration implications, and effort measured by the Phase 1 spikes
+    5. a recommendation
+  - **Owner decision, one of:**
+    - **(a)** deploy 14.2.35 with the listed mitigations
+    - **(b)** deploy a **static export** (`output: 'export'`) of 14.2.35, which removes the Node
+      server runtime and most of the attack surface
+    - **(c)** upgrade to a supported LTS first (16.x Active LTS at the time of writing, React 19,
+      the middleware convention change)
+  - **Recommendation rule:** if advisories remain unresolved and no static-export path exists,
+    the recommendation is (c). Nothing is deployed and no version is changed without the owner's
+    explicit decision.
+- **Phase 1 work for X2 and G-WEB (measurement only, nothing deployed):**
+  - pin 14.2.35, run `npm audit`, and record the advisory list as the X2 baseline
+  - in a throwaway branch, spike a **static-export** build, checking whether it works with
+    next-intl locale routing and the sign-in redirects [UNVERIFIED]
+  - in a throwaway branch, run a **Next 16 smoke build** to measure the upgrade cost
+  - a Node 24 smoke test for 14.2.35, with Node 22 LTS as the fallback
+  - Nothing from the spikes is merged without owner approval.
+- **Migration plan (proposed):** keep the frontend thin, with logical CSS, no Server Actions, and
+  no framework-specific authorization, so the 14 → 16 upgrade stays small. The upgrade cost grows
+  the longer it is delayed (React 19, the middleware rename).
+- **Decision (i18n and UI):**
+  - Next.js 14.2.35 with the App Router and **next-intl v4** (4.14.9 lists `^14.0.0` for `next`
+    and `^18.0.0` for `react` as peers). Routes are `/ar/...` (default) and `/en/...`.
   - `<html lang dir>` is set per locale.
   - Styling uses only logical CSS properties (`margin-inline-start`, `padding-inline`, `start`/`end`)
     through Tailwind CSS. Tailwind's logical utilities, such as `ms-*`, `ps-*` and `start-*`, cover
     this.
+  - Styling uses Tailwind CSS **3.4.19** (`v3-lts`). Tailwind 4 is not adopted with Next 14 until
+    it has been verified.
   - Components come from a headless library that supports RTL (Radix-based shadcn/ui
-    [UNVERIFIED: compatibility with Next 16 and React 19; verify in the Phase 1 plan]).
-  - Charts use Recharts or ECharts, with RTL axis handling tested [UNVERIFIED: React 19 support of
-    the chosen chart library].
+    [UNVERIFIED: a release line compatible with React 18 and Tailwind 3; pin it in the Phase 1
+    plan]).
+  - Charts use Recharts or ECharts, with RTL axis handling tested [UNVERIFIED: React 18 support of
+    the chosen chart library version; pin it in the Phase 1 plan].
   - Numbers and dates use `Intl` with the `ar` locale and Latin digits by default (configurable).
     Gregorian is the default calendar, with Hijri display optional (P2).
-  - The frontend makes no authorization decision. Next.js middleware (or its Next 16 equivalent)
-    handles only locale routing and sign-in redirects. Server Actions are not used for business
-    operations.
-- **Reconsider when:** 16.x leaves Active LTS, or a dependency blocks React 19.
+  - The frontend makes no authorization decision. Next.js middleware handles only locale routing
+    and sign-in redirects. Server Actions are not used at all (X2 mitigation 2).
+- **Reconsider when:** a review trigger above fires, G-WEB is reached, or a required dependency
+  drops React 18 support.
+- **Open items:**
+  - G-WEB (owner decision before any public deployment)
+  - the UI kit and chart library versions (Phase 1 plan, routine)
+  - Node 24 compatibility (Phase 1 smoke test)
+  - the static-export feasibility (Phase 1 spike)
 
-### ADR-018: Identifier forms for restricted contexts
-- **Decision:**
-  - Python package and Postgres schema: `servio_ai`, **approved by the owner (D30)**.
-  - **Proposed** (needs approval with this ADR):
-    - additional schemas `servio_ai_platform` (platform scope) and `servio_ai_wf` (workflow
-      checkpoints), derived from the approved base form
-    - DB roles: `servio_ai_app`, `servio_ai_platform`, `servio_ai_migrator`,
-      `servio_ai_maintenance`
-    - public frontend env vars: `NEXT_PUBLIC_SERVIO_AI_<NAME>`
-    - Neo4j labels, if G-NEO adopts Neo4j, stay in PascalCase domain names, without a prefix
+### ADR-018: Product identifiers, restricted-context forms, and frontend variable naming
+- **Context:** D45, D46, and D52. The canonical name is **Servio**. `servio_ai` is retained for
+  internal identifiers where hyphens are not allowed. Schemas and roles must never share a name.
+- **Decision (owner-decided forms):**
+  - Product name `Servio`; lowercase `servio` (e.g. `servio-web`, `servio-api`,
+    `servio-worker`, `servio-api-contract`, Compose project `servio`); environment variables
+    `SERVIO_<NAME>` (D45, D46).
+  - Browser-exposed frontend variables use **`NEXT_PUBLIC_SERVIO_<NAME>`** (e.g.
+    `NEXT_PUBLIC_SERVIO_API_BASE_URL`). Only values intended for every browser may use this
+    prefix. **Secrets must never use it** (ADR-016 bundle check) (D46).
+  - Python import package and base Postgres schema: `servio_ai`, **approved by the owner (D30)**
+    and retained by D45. The English and Arabic taglines are not identifiers.
+- **Proposed derived names** (approved together with this plan, D52):
+
+  | Name | Kind | Purpose | Permissions (summary) |
+  |------|------|---------|-----------------------|
+  | `servio_ai` | Schema | Tenant-owned application data (§7.2) | Every tenant table has `tenant_id` with RLS enabled and forced; not exposed through the Supabase Data API |
+  | `servio_ai_platform` | **Schema** | Platform registry, settings, platform audit, incidents (§7.2, ADR-019) | No `tenant_id`; reachable only by `servio_ai_platform_app` and the migrator; not exposed through the Data API |
+  | `servio_ai_wf` | Schema | LangGraph checkpoint tables (ADR-006) | `tenant_id` and RLS added by migrations; used by `servio_ai_app` |
+  | `servio_ai_app` | **Login role** | Tenant API and worker runtime (ADR-003) | `NOBYPASSRLS`, not a table owner; DML on `servio_ai` and `servio_ai_wf` under RLS; no access to `servio_ai_platform` except the tenant-readable `tenants` row via RLS; credentials only through a `SECURITY DEFINER` accessor |
+  | `servio_ai_platform_app` | **Login role** | Platform API runtime (ADR-019) | DML on `servio_ai_platform`; **no grants on tenant content tables**; tenant figures only through aggregate `SECURITY DEFINER` functions; JWT `aal2` enforced by the API |
+  | `servio_ai_migrator` | Owner role | Applies `supabase/migrations` (`db push`) | Owns the schemas; never used by the running API or worker |
+  | `servio_ai_maintenance` | Login role | Cross-tenant maintenance jobs (reconciliation scheduling, support-grant expiry) | A minimal, audited grant set; no general content reads |
+
+  - Neo4j labels, if G-NEO adopts Neo4j, stay in PascalCase domain names, without a prefix.
+- **Open items:** approve the derived names above together with this plan. pgTAP grant
+  allow-list tests (ADR-003, item 8) enforce the permissions column.
 
 ### ADR-019: Platform administration and support access
 - **Context:** D21 and proposed amendment A6. The constitution requires tenant context to be
@@ -1493,7 +1710,7 @@ Cost / Reconsider when**.
     created_by)` with role ∈ {`platform_super_admin`, `platform_operator`}. It is independent of
     memberships.
   - Platform API routes live under `/api/v1/platform/*`, use a `PlatformContext` (never a
-    `TenantContext`), connect as the `servio_ai_platform` role, and require a JWT with
+    `TenantContext`), connect as the `servio_ai_platform_app` role (D52), and require a JWT with
     `aal = aal2`.
   - Platform reads of tenant data are limited to aggregate `SECURITY DEFINER` functions that
     return counts, sizes, and statuses.
@@ -1567,6 +1784,72 @@ Cost / Reconsider when**.
 - **Cost:** $0 in the MVP; the live adapter is enabled only if verified at $0. Paid providers
   have their own costs, to be documented and approved before adoption.
 
+### ADR-022: Runtime and dependency pins (Python 3.11.x, Next.js 14.2.35)
+- **Status:** Proposed. The owner approval required covers the pin policy and the pinned set.
+  Individual patch bumps after approval are routine (§0.5), except a Python minor or Next.js
+  major change, which needs owner approval.
+- **Context:** D47 and D48. No lockfile or pinned list existed in the repository before this
+  ADR (the Decision Log, Q7). The owner overrode the earlier Python 3.12.15 proposal with
+  **3.11.x** on 2026-10-21.
+- **Python runtime (D48):**
+  - Target: **CPython 3.11.x**. Its upstream status is security fixes only, with end of support
+    in **2027-10** (R19).
+  - **Exact patch: not selected.** Candidates are **3.11.16**, the newest uv-managed build
+    (available for Windows and Linux), and **3.11.17**, the newest upstream release from
+    2026-10-01, source-only (the project `.conda` happens to contain it).
+  - The patch is pinned in `.python-version` in Phase 1, once a uv environment on that patch
+    passes an import and smoke test of the backend set.
+  - **Runtime compatibility on 3.11: [UNVERIFIED].** No package was installed for this ADR.
+- **Backend set** (exact pins proposed; resolved together on 2026-10-21):
+
+  | Package | Pin | Note |
+  |---------|-----|------|
+  | fastapi | 0.156.8 | Released 2026-10-21. Re-resolve at Phase 1 start and prefer a release at least 7 days old. |
+  | starlette | 1.9.0 | Transitive; needs Python `>=3.11` |
+  | uvicorn[standard] | 0.54.0 | |
+  | pydantic / pydantic-core | 2.14.1 / 2.50.1 | |
+  | langgraph | 1.2.16 | With langgraph-checkpoint 4.3.0 and langgraph-prebuilt 1.1.1 |
+  | langgraph-checkpoint-postgres | 3.2.0 | ADR-006 |
+  | langchain / langchain-core | 1.4.6 / 1.6.12 | Mutually compatible (`langchain` requires `langchain-core>=1.6.10` and `langgraph<1.3,>=1.2.12`) |
+  | langchain-deepseek / langchain-openai / openai | 1.1.1 / 1.7.2 / 3.35.1 | DeepSeek adapter (ADR-007) |
+  | psycopg[binary,pool] / psycopg-pool | 3.3.6 / 3.3.3 | |
+  | pgvector (Python client) | 0.5.1 | |
+
+- **Evidence (2026-10-21, read-only):**
+  - `uv pip compile` with `--python-version 3.11` for `x86_64-unknown-linux-gnu` and for
+    `x86_64-pc-windows-msvc` resolved 60 packages with exit code 0 and no install.
+  - The PyPI metadata of every pinned package allows 3.11.
+  - **What this does not prove:** that the packages import and run correctly on 3.11, ARM64
+    resolution for the demo VM, or the tooling packages (pytest, ruff, mypy,
+    sentence-transformers, OpenTelemetry SDK, structlog, pydantic-settings, cryptography). All of
+    these are verified in Phase 1.
+- **pgvector extension:** `>=0.8.0` (iterative index scans), as shipped by the Supabase Postgres
+  image. The exact extension version is recorded from `select extversion from pg_extension` in
+  Phase 1.
+- **Frontend set (D47, ADR-017):**
+  - `next` **14.2.35** and `eslint-config-next` **14.2.35**
+  - `react` and `react-dom` **18.3.1**
+  - `next-intl` **4.14.9**
+  - `typescript` **5.9.3**
+  - `@types/react` **18.3.31** and `@types/react-dom` **18.3.7**
+  - `tailwindcss` **3.4.19**
+  - ESLint 8.x, as required by the `eslint-config-next@14` peer range (R20)
+  - Peer ranges were checked against the registry metadata. A full `npm` lockfile resolution
+    was **not run** (no `package.json` exists yet).
+- **Node.js:** 24.x LTS, with the exact patch pinned in `.nvmrc` in Phase 1. Next.js 14.2.35 on
+  Node 24 is [UNVERIFIED]; the fallback is Node 22 LTS.
+- **Pin policy:**
+  - Exact versions only, with `uv.lock` and `package-lock.json` committed in Phase 1.
+  - Re-resolve at the start of Phase 1 and record the result here.
+  - Security patches within 7 days.
+  - `pip-audit` and `npm audit` in CI.
+  - No version change without a recorded reason.
+- **Open items:**
+  - The Python patch and runtime smoke test (Phase 1).
+  - ARM64 resolution (Phase 9).
+  - The tooling package pins (Phase 1 plan).
+  - Approval of this ADR together with plan v0.4.0.
+
 ---
 
 ## 7. Data Model and API Design
@@ -1629,7 +1912,7 @@ Conventions:
 | `support_grants` | `requested_by` (platform user), `reason`, `scope`, `duration`, `status` (requested, approved, rejected, active, expired, revoked), `decided_by`, `expires_at`; the platform side creates and reads its own requests only through `SECURITY DEFINER` functions that expose status, never tenant content |
 
 **Platform scope (schema `servio_ai_platform`; no `tenant_id`; reached only by the
-`servio_ai_platform` role; ADR-019)**
+`servio_ai_platform_app` login role; ADR-018, ADR-019)**
 
 | Table | Key columns / constraints |
 |-------|---------------------------|
@@ -2018,7 +2301,7 @@ executed_unverified → verified_success`. Other terminal and branch states are 
 |---|--------|-----|-----|----------|-------|
 | T1 | Cross-tenant data leakage (SQL, vectors, files, traces) | Critical | Medium | RLS with FORCE, a non-bypass app role, `SET LOCAL`, repository `TenantContext`, storage paths prefixed by tenant with signed URLs issued by the backend, 404 for foreign IDs | Negative suite per resource type (Principle III). An RLS policy-coverage test fails if any table lacks a policy. |
 | T2 | Forged tenant context / privilege escalation | Critical | Medium | Tenant derived from membership, header only a selector, role checked server-side, last-owner guard | Forged header, role tampering, and JWT for another tenant |
-| T3 | Frontend framework vulnerabilities (Next.js 16.x and its dependencies) | Medium | Medium | Supported Active LTS only (ADR-017 version policy), security patches within 7 days, no secrets or authorization in Next middleware, all authorization in the API, CSP headers, Caddy in front, no Server Actions for business operations, `npm audit` monitoring | Header and CSP checks, dependency scan, support-status check at each phase exit |
+| T3 | Frontend framework vulnerabilities: **Next.js 14.2.35 is Unsupported upstream**, with known advisories that have no 14.x patch (CVE-2026-96889, GHSA-p3m5-59mp-jv5r) | **High** | Medium (development and private demos); unacceptable for public exposure without G-WEB | Exception X2 mitigations (ADR-017): image optimizer off, no Server Actions, no authorization in middleware, all authorization in the API, CSP, Caddy header stripping and anonymous-POST rate limit, web container with no secrets and no outbound access except the API, `npm audit` against the X2 baseline. **Mitigations are not patches.** No public deployment before G-WEB. | Header and CSP checks, a lint rule for `"use server"`, a config test for `images.unoptimized`, dependency scan, advisory and support-status check at each phase exit |
 | T4 | Prompt injection leading to an unauthorized action | High | High | The LLM can only *propose* from a catalog. Authorization, policy, and approval are deterministic. Content is delimited, and suspicious content is flagged. | CCRB injection cases (≥10), with 0 unauthorized executions required |
 | T5 | Duplicate or unintended tool execution | High | Medium | Idempotency keys, unique constraints, checkpoint-before-execute, no blind retries on unknown | Replay and resume tests, double-submit E2E |
 | T6 | Approval tampering | High | Low | Hash binding, four-eyes, expiry, audit hash chain | Param-change test, self-approval test |
@@ -2029,8 +2312,8 @@ executed_unverified → verified_success`. Other terminal and branch states are 
 | T11 | Resource exhaustion (runaway loops, quota burn) | Medium | Medium | Run budgets, per-tenant rate limits (token bucket in Postgres), job attempt caps, upload size limits | Budget-exceeded tests |
 | T12 | Insecure file access | Medium | Low | Private buckets, backend-issued short-lived signed URLs, MIME sniffing, size limits, PDF parsing in the worker with timeouts | Direct-object access test |
 | T13 | Audit tampering | Medium | Low | INSERT-only grants, hash chain, periodic verification job | Chain verification test |
-| T14 | Free-tier provider data use (D9) | Medium | High (by design) | Synthetic-only gate, provider metadata, no secrets or PII in prompts, redaction | A test that a `real` tenant refuses `may_train` providers |
-| T15 | Platform admin overreach or compromised platform account reading tenant content | Critical | Low | Separate platform domain and DB role with no content grants, aggregate-only functions, `aal2` MFA, tenant-approved expiring support grants, dual audit, banner in the tenant UI, no break-glass in the MVP | Platform negative suite: every tenant-content route and table with a platform identity (no grant, expired grant, revoked grant); pgTAP grant allow-list for `servio_ai_platform` |
+| T14 | Provider data use: free tiers (D9) and DeepSeek (PRC processing; training use with opt-out, D49) | Medium | High (by design) | Synthetic-only gate, provider metadata with least-favorable defaults, the activation gate and training opt-out before any DeepSeek call (ADR-007), no secrets or PII in prompts, redaction | A test that a `real` tenant refuses `may_train` providers and providers with an unapproved processing location |
+| T15 | Platform admin overreach or compromised platform account reading tenant content | Critical | Low | Separate platform domain and DB role with no content grants, aggregate-only functions, `aal2` MFA, tenant-approved expiring support grants, dual audit, banner in the tenant UI, break-glass **prohibited** (constitution Principle III, D38) | Platform negative suite: every tenant-content route and table with a platform identity (no grant, expired grant, revoked grant); pgTAP grant allow-list for the `servio_ai_platform_app` role |
 | T16 | Supabase misconfiguration (Data API exposing app schemas, `service_role` key leak, RLS missing on a new table, public bucket) | Critical | Medium | App schemas not exposed and no `anon`/`authenticated` grants, `service_role` only in backend and CI secrets, RLS coverage test in pgTAP, private buckets only, migration review checklist | pgTAP coverage and grant tests, a test that the anon key cannot read any app table through the Data API, bundle secret scan |
 | T17 | Misleading console data (fabricated or synthetic figures read as real) | Medium | Low | KPI definitions with sources (§3.7.3), "No data" and "Not measured" states, synthetic badges, provenance labels in Market Intelligence | KPI fixture tests, empty-dataset tests, label presence tests in E2E |
 
@@ -2126,7 +2409,7 @@ The MVP minimum:
 
 ### 10.2 Metrics and initial targets (MVP; thresholds approved per phase spec)
 
-| Metric | Definition | Target with a free cloud model [EST] |
+| Metric | Definition | Target with the primary provider (DeepSeek once activated; otherwise a permitted free tier) [EST] |
 |--------|------------|----------------------|
 | Retrieval recall@10 / nDCG@10 | Over `retrieval-v1` | ≥0.85 / ≥0.70 |
 | Citation correctness | Cited spans actually support the claim (deterministic span match plus a labelled set) | ≥0.95 |
@@ -2144,7 +2427,7 @@ The MVP minimum:
 | Verification success | Executed actions with a definitive verified outcome | ≥0.95 (mock) |
 | Resolution success | Case reaches the expected final state | ≥0.80 |
 | Latency p50/p95 | Per case run | Recorded. p95 ≤60 s. |
-| Tokens and cost per case | — | Recorded. $0 actual, with a notional cost at list price shown. |
+| Tokens and cost per case | — | Recorded. Actual spend only from authorized DeepSeek runs within the approved cap (D50); notional cost at list price shown. |
 
 ### 10.3 Baselines and regression
 
@@ -2152,31 +2435,33 @@ The MVP minimum:
 |----------|------------------|
 | **B0, mock provider** | Deterministic scripted outputs. Tests the pipeline mechanics and must hit 100% of the hard gates. |
 | **B1, lexical-only retrieval** | Retrieval without the semantic component |
-| **B2, free cloud model** | The primary demo model |
+| **B2, primary provider (DeepSeek `deepseek-flash`)** | The selected primary (D49). It runs **only** as an authorized local evaluation run after activation approval, within the cap (D50). This is the Phase 4 validation against B0. |
+| **B2-free, permitted free tier** | The fallback quality reference for nightly runs and demos (no paid key) |
 | **B3, local small model** | The offline fallback |
 
 **Triggers.** Any change to prompts, model or provider config, retrieval config, embedding model,
 graph version, or policy schema triggers a CI job that runs:
 
 - the B0 suite on every PR
-- a nightly B2 run on the CCRB subset, when a free quota is available
-- a full run before each phase exit
+- a nightly B2-free run on the CCRB subset, when a free quota is available (never the paid key)
+- a full run before each phase exit, with B2 included only as an authorized local run within
+  the cap
 
 A regression greater than 3 points on any metric, or any hard-gate failure, blocks merge or exit.
 
 ---
 
-## 11. Free-Tier and Cost Register (verified 2026-10-20 unless marked)
+## 11. Free-Tier and Cost Register (verified 2026-10-20 unless marked; DeepSeek rows 2026-10-21)
 
 | Component | Purpose | Mandatory | Technology / licence | Free-tier facts | Possible charges / triggers | Local fallback | Quota-exhaustion behavior | Security / residency | Source |
 |-----------|---------|:---------:|----------------------|-----------------|-----------------------------|----------------|---------------------------|----------------------|--------|
 | Supabase PostgreSQL + pgvector | **Authoritative system of record**, vectors, temporal graph | Yes (D19) | Supabase Postgres (PostgreSQL licence), pgvector (PostgreSQL licence) | Local CLI: $0. Cloud Free: 500 MB database, shared CPU with 500 MB RAM, pauses after 7 idle days, **no automatic backups, no PITR**, 1-day logs | Pro from $25/month (needs owner approval) | Supabase CLI stack on the laptop; self-hosted Supabase on the VM | Near the cap: alert at 400 MB, trim traces and audit per retention, then owner decision. Paused: restore from Studio (1-year window). | Cloud region chosen at setup; synthetic data only | supabase.com/pricing, supabase.com/docs/guides/platform/backups |
 | Supabase Auth and Storage | Identity, files | Yes | Supabase (Apache-2.0 [UNVERIFIED per component]) Cloud Free / CLI | 50k MAU, 1 GB storage, 50 MB max upload, 5 GB egress; MFA `aal2` supported (TOTP on Free [UNVERIFIED]) | Pro from $25/month | CLI or self-host | Storage full: uploads refused with a clear error; demo corpus kept small | Private buckets, signed URLs | supabase.com/pricing |
 | Neo4j Community | Optional derived graph **[PENDING G-NEO]** | **No** (D20) | GPLv3 | $0 self-hosted (VM or laptop only) | Enterprise licence if RBAC is needed | PostgreSQL graph is the default | Not deployed unless adopted. If adopted and down: graph views fall back to the PostgreSQL adapter | Internal network only | neo4j.com/docs/operations-manual |
-| LLM: Gemini free tier | Primary candidate | One free cloud LLM needed for quality | Proprietary API | Free tier exists. **Content used to improve Google products.** Limits [UNVERIFIED ~10 RPM, 250 RPD for Flash]. | Charges only if billing is linked (forbidden by D8) | Groq, then OpenRouter, then local, then mock | Fallback chain plus a degraded banner | Synthetic data only (D9). EEA/UK restriction [UNVERIFIED]. | ai.google.dev/pricing |
+| LLM: Gemini free tier | Free-tier fallback for CI, nightly runs, and demos (DeepSeek is primary, D49) | Optional | Proprietary API | Free tier exists. **Content used to improve Google products.** Limits [UNVERIFIED ~10 RPM, 250 RPD for Flash]. | Charges only if billing is linked (forbidden by D8) | Groq, then OpenRouter, then local, then mock | Fallback chain plus a degraded banner | Synthetic data only (D9). EEA/UK restriction [UNVERIFIED]. | ai.google.dev/pricing |
 | LLM: Groq free | Fast fallback | Optional | Proprietary API, open-weight models | [UNVERIFIED ~30 RPM, 1k RPD per model, default no retention] | Paid tier if upgraded | Same chain | Same | US-hosted | console.groq.com (verify) |
 | LLM: OpenRouter `:free` | Fallback | Optional | Aggregator | [UNVERIFIED 50 RPD; training depends on the upstream provider] | Credits purchase (forbidden by D8) | Same chain | Same | Per upstream provider | openrouter.ai/docs (verify) |
-| LLM: DeepSeek | Primary evaluation candidate (D31) | Optional | Proprietary API | [UNVERIFIED: no confirmed permanent free tier; trial credits reported by third parties] | Pay-as-you-go. **Approved: $5 prepaid hard cap for the Phase 4 spike only, no auto-recharge (D32).** Billing model [UNVERIFIED]; verify before top-up. | Same chain | Disabled outside the spike unless approved; budget exhausted: spike stops, chain falls back | China-based processing [UNVERIFIED]: synthetic data only; terms and processing location verified and recorded before activation | api-docs.deepseek.com (verify) |
+| LLM: DeepSeek | **Selected primary provider (D49)**, default `deepseek-flash` | Not required for the $0 demo path (the mock covers every workflow) | Proprietary API via `openai_compatible` | **No free tier assumed.** Verified 2026-10-21: `deepseek-flash` cache-miss input $0.30 and output $1.20 per 1M tokens at peak, half off-peak; usage deducted from a topped-up or granted balance | Pay-as-you-go. **Proposed USD 5 aggregate cap (D50)**, shared by the Phase 1 smoke tests and the Phase 4 validation. Activation, top-up, auto-recharge, or increase need **separate explicit owner approval**. No billing activated and no credits bought. | Mock; permitted free tiers | Adapter disabled by default and refused in `ci` and `demo`; owner review at 80% of the cap; at 100%, paid calls stop and the run falls back to labelled degraded or mock mode | **Processing in the PRC** (privacy policy, 2026-10-21); inputs may be used for training with an opt-out [UNVERIFIED for the API]: synthetic data only; opt-out and terms recorded before activation | api-docs.deepseek.com/quick_start/pricing, cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html |
 | LLM: OpenAI | Constitution-listed | Optional | Proprietary API | No free tier assumed | Pay-as-you-go | — | Disabled unless approved | — | — |
 | Local LLM runtime | Offline fallback | Optional | Ollama (MIT [UNVERIFIED]) or llama.cpp (MIT [UNVERIFIED]) | $0 | Electricity | — | Model not loaded: fall back to mock with a degraded banner | Local | — |
 | Embeddings (bge-m3) | Semantic retrieval | Yes | MIT [UNVERIFIED on the official card] | $0 local | — | Lighter e5-small | Embedding backlog queues, and lexical search continues | Local | huggingface.co/BAAI/bge-m3 (verify) |
@@ -2191,13 +2476,16 @@ development and the initial hosted demo as long as the free tiers above remain a
 their current terms. Free tiers can change, throttle, pause, or disappear; the plan therefore
 keeps a working path that needs no external service at all (laptop, Supabase CLI stack, mock
 provider, synthetic data). No paid service may become mandatory without owner approval (§0.5).
+DeepSeek is the selected primary provider (D49), but it is never required for the demo path. Paid
+use is limited to authorized local development and evaluation runs, under the proposed USD 5
+cap and only after activation approval (D50).
 
 **Environment tiers:**
 
 | Tier | What runs where | Cost | Reliability expectation |
 |------|-----------------|------|-------------------------|
 | Local development | Everything on the laptop: Supabase CLI stack, API, worker, web, optional local LLM | $0 (electricity) | Depends on the laptop; no external dependency required |
-| Free hosted demo | Supabase Cloud Free (data) + Oracle Always Free VM (app) + free LLM tier or mock | $0 while the free terms hold | Best effort: pausing, reclamation, quotas, and no backups are accepted risks with mitigations (ADR-015) |
+| Free hosted demo | Supabase Cloud Free (data) + Oracle Always Free VM (app) + free LLM tier or mock (no paid key). **Private until G-WEB** (ADR-017). | $0 while the free terms hold | Best effort: pausing, reclamation, quotas, and no backups are accepted risks with mitigations (ADR-015) |
 | Production | A paid managed database plan with backups/PITR, paid no-training LLM, monitoring, secret manager | **Not $0.** Estimated separately before any real-data pilot | Requires an approved production ADR |
 
 **Resource constraints on the free hosted demo [EST]:** the VM's 12 GB holds the web (about 0.5
@@ -2211,16 +2499,19 @@ are measured against NFR-15 in Phase 6.
 - **Local development:** $0 in cash. It uses the existing laptop, with electricity as the only
   cost.
 - **Initial hosted demo:** $0 under D8, D24, and D27, while the free terms hold.
-- **Approved bounded spend:** the DeepSeek evaluation spike, $5 prepaid hard cap, Phase 4 only
-  (D32). It is not required by the demo.
+- **Proposed bounded spend:** DeepSeek paid testing, a USD 5 aggregate cap for authorized local
+  development and evaluation runs from Phase 1 (D50, amends D32). It needs explicit approval
+  before activation and is not required by the demo.
 - **Optional costs needing owner approval** (documented future options, never mandatory):
   - a custom domain, about $10–15 per year
   - a paid LLM for higher demo reliability, usage-dependent and likely in the low tens of dollars
     per month
   - Supabase Pro at $25 per month (backups, no pausing)
   - live research APIs for Market Intelligence (pricing to be researched on adoption)
-- **Unresolved pricing:** the DeepSeek, Groq, OpenRouter, and Gemini limits are third-party
-  figures and must be confirmed in their consoles at adoption.
+- **Unresolved pricing:** the Groq, OpenRouter, and Gemini limits are third-party figures and
+  must be confirmed in their consoles at adoption. DeepSeek list prices were verified on
+  2026-10-21, but its balance mechanism (prepaid hard limit, granted balance) must be confirmed
+  in the console before activation.
 
 ---
 
@@ -2239,7 +2530,7 @@ i7-11800H (8 cores / 16 threads), 16 GB RAM, RTX 3050 Laptop with 4 GB VRAM, abo
 | Supabase CLI stack (trimmed) | ~1.5–2.5 GB |
 | Neo4j (heap 512 MB–1 GB, page cache 512 MB): **only during the G-NEO PoC** | (~1.5 GB) |
 | API + worker | ~0.7 GB |
-| Next dev server (Next.js 16) | ~0.8–1.2 GB [EST] |
+| Next dev server (Next.js 14.2.35) | ~0.8–1.2 GB [EST] |
 | bge-m3 embeddings on GPU (fp16, ~1.2 GB VRAM) or CPU (~2.3 GB RAM) | variable |
 | **Total (default, no Neo4j)** | **~9.5–12.5 GB.** It fits, with modest headroom. Add ~1.5 GB while the G-NEO PoC runs. |
 
@@ -2252,8 +2543,9 @@ Rules that follow from this budget:
 
 ### 12.2 Configuration A: CPU-only (required to work, per the constitution)
 
-- **LLM:** the free cloud tier is primary, with the mock provider for development and tests. As a
-  local fallback, a 3–4B instruct model at Q4 (e.g. Qwen3-4B or Phi-4-mini) needs about 3–4 GB of
+- **LLM:** DeepSeek is the selected primary once activated (D49), for authorized local runs only.
+  The mock provider covers development, tests, CI, and demos, with permitted free tiers as
+  fallbacks. As a local fallback, a 3–4B instruct model at Q4 (e.g. Qwen3-4B or Phi-4-mini) needs about 3–4 GB of
   RAM. On 8 CPU cores, expect roughly 5–12 tokens per second [EST] and about 30–90 s per
   structured call. That is acceptable for an offline fallback but not for a live pitch.
 - **Embeddings:** bge-m3 on CPU, at roughly 20–60 passages per second in batches [EST]. The demo
@@ -2284,8 +2576,9 @@ Rules that follow from this budget:
 
 | Situation | LLM | Embeddings | Reranker |
 |-----------|-----|------------|----------|
-| Development | Mock provider | bge-m3 on GPU | Off |
-| Demo | Free cloud tier (primary chosen in the Phase 4 spike) → Groq → local 4B on GPU → mock | bge-m3 | Optional, on GPU |
+| Development | Mock provider; DeepSeek `deepseek-flash` for authorized local runs after activation approval (D49, D50) | bge-m3 on GPU | Off |
+| Evaluation (Phase 4 validation) | DeepSeek (authorized local run within the cap) compared with the mock baseline B0 | bge-m3 | Optional |
+| Demo (private now; public only after G-WEB) | Mock, or permitted free tier → local 4B on GPU → mock. No paid key unless the owner separately authorizes it. | bge-m3 | Optional, on GPU |
 | Demo VM (app tier) | Cloud only, or mock | CPU | — |
 | No-LLM demo mode | Mock provider only | bge-m3 (local or VM CPU) | Off |
 
@@ -2311,9 +2604,9 @@ flowchart LR
     P3 --> P4["4 Case Intelligence + workflow"]
     P4 --> P5["5 Safe actions + approval center"]
     P5 --> P6["6 Supervisor Console + Platform Admin Console"]
-    P3 --> P7["7 Market Intelligence (synthetic sources)"]
+    P3 --> P7["7 Market Intelligence (synthetic + one gated live source)"]
     P7 --> P8["8 Idea Intelligence"]
-    P6 --> P9["9 Eval Lab, hardening, demo deploy"]
+    P6 --> P9["9 Eval Lab, hardening, G-WEB, demo deploy"]
     P8 --> P9
 ```
 
@@ -2325,14 +2618,24 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
 - **Exit:**
   - The owner approves this plan, including the decision register (§0.4) and the deferral lists
     (§3.3a, §3.7.4).
-  - The constitution amendments (A1–A6) are applied (**done**: v1.3.0, 2026-10-20) and the
-    constitution is ratified by the owner (pending).
+  - The constitution amendments are applied to the proposed text (**done**: A1–A6 in v1.3.0 on
+    2026-10-20; B1–B5 in v2.0.0 on 2026-10-21). The owner ratifies constitution v2.0.0 and
+    approves this plan v0.4.0 together (Q1). Both are **pending**.
   - Git is initialized and the public GitHub remote exists (done by the owner, D29). The
     public-repo controls (D44) are in place before any application code is committed.
 
-### Phase 1: Secure multi-tenant foundation, platform identity, and bilingual shell, size **L** (priority P0)
-- **Includes (Module A, Module L shell):**
-  - repository scaffold and CI (Next.js 16.x pinned per ADR-017)
+### Phase 1: Secure multi-tenant foundation, platform identity, bilingual shell, and provider foundation, size **XL** [EST; was L before D49] (priority P0)
+- **Includes (Module A, Module L shell, and the minimal provider foundation from D49):**
+  - repository scaffold and CI, with versions pinned per ADR-022: Next.js 14.2.35, React
+    18.3.1, Python 3.11.x with the exact patch chosen after a smoke test
+  - **X2 baseline and spikes (ADR-017):** `npm audit` advisory list recorded, X2 mitigations
+    configured, a static-export spike and a Next 16 smoke build in throwaway branches
+    (measurement only, nothing merged or deployed), and a Node 24 smoke test
+  - **provider foundation (ADR-007):** the `ChatModel` interface, the `mock` adapter, the
+    `openai_compatible` adapter for DeepSeek (**disabled by default**; refused in `ci` and
+    `demo`), the data-classification gate, the paid-spend `usage_records` hook, and a smoke
+    test. The smoke test runs against the mock unless DeepSeek activation has been approved, and
+    then within the cap.
   - Supabase local stack, `supabase/migrations`, pgTAP harness, and the DB roles (ADR-003, D28)
   - a Supabase Cloud Free project linked for later `supabase db push` (no data yet)
   - tenants, memberships, the 7 tenant roles, and the permission service
@@ -2344,7 +2647,8 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
   - the Next.js shell (AR/EN, RTL/LTR), sign-in, org switcher, members screen, audit screen, and
     the console navigation skeleton with all five required states (§3.7.2, item 14)
   - structured logging and the trace ID
-- **Excluded:** connectors, AI.
+- **Excluded:** connectors and agent reasoning (LangGraph workflows, retrieval, prompts beyond
+  the smoke test).
 - **Demo:** two synthetic tenants. Switching language flips direction. A viewer cannot manage
   members. A forged tenant header is rejected and visible in the audit log. A platform super admin
   (with MFA) lists the two tenants but cannot open any tenant's members.
@@ -2355,10 +2659,19 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
   - The RTL and LTR Playwright snapshots pass.
   - The secret scan is clean, and the anon key cannot read any app table through the Data API.
   - The threat review is done.
-  - The Phase 1 [UNVERIFIED] items are resolved: Supabase pooler mode, TOTP on Free, Next.js 16
-    middleware convention, and UI kit compatibility with React 19.
-- **Risks:** Supabase JWT verification details; pooler behavior with `SET LOCAL`; React 19
-  ecosystem compatibility. **Cost:** $0.
+  - The Phase 1 [UNVERIFIED] items are resolved:
+    - Supabase pooler mode and TOTP on Free
+    - Next.js 14.2.35 on Node 24
+    - UI kit and chart library compatibility with React 18
+    - the Python 3.11 patch and runtime smoke test (ADR-022)
+    - the static-export feasibility result and the Next 16 upgrade-cost measurement (input to
+      G-WEB)
+  - The X2 advisory baseline is recorded.
+  - Tests prove the DeepSeek adapter is disabled without an activation flag and refused in `ci`
+    and `demo`. The mock smoke test passes.
+- **Risks:** Supabase JWT verification details; pooler behavior with `SET LOCAL`; React 18
+  ecosystem compatibility; scope growth from the provider foundation (R21). **Cost:** $0, plus
+  at most the approved DeepSeek cap if activation is approved (D50).
 
 ### Phase 2: Connectors, data foundation, and Customer 360, size **L** (P0)
 - **Includes (Modules B and E):**
@@ -2415,8 +2728,8 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
 
 ### Phase 4: Case Intelligence and the agent workflow, size **XL** (P0)
 - **Includes (Modules F, G, and tracing from I):**
-  - provider abstraction (mock, free cloud, local) with the data-classification gate and degraded
-    mode
+  - the provider abstraction extended from Phase 1: local and free-tier fallback adapters, the
+    fallback chain, and degraded mode
   - the LangGraph `case_resolution` graph up to Assessment, Respond, Clarify, and Escalate
   - CitationGuard, budgets, cancel, and resume
   - Postgres checkpoints with RLS
@@ -2426,14 +2739,18 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
     console's workflow monitor
   - LLM span attributes for AI-operations metrics (ADR-012)
   - `ccrb-v1` (the analysis-only subset) and the eval runner CLI
-  - **the spike that chooses the primary LLM (Q3)**, covering the free candidates and DeepSeek
-    under the $5 capped budget (D31, D32), on synthetic data only
+  - **the DeepSeek validation (D49):** DeepSeek (`deepseek-flash`) compared with the mock
+    baseline (B0) on `ccrb-v1`, as an authorized local run within the approved cap (D50), on
+    synthetic data only. Free tiers stay as optional fallbacks. The validation must not silently
+    replace the selected provider; a change needs an ADR update and owner approval.
 - **Excluded:** executing actions.
 - **Demo:** analyze the missing-delivery case and get a cited, structured assessment, with the
   full trace visible in the UI.
 - **Exit:**
   - the B0 suite passes 100%
-  - the B2 run meets the citation and unsupported-claim targets
+  - the B2 (DeepSeek) run meets the citation and unsupported-claim targets. If activation has
+    not been approved, this criterion is reported as **pending** with a B2-free result instead,
+    and the owner decides whether the phase may exit.
   - the injection cases produce no policy violations
   - the checkpoint isolation tests pass
 - **Risks:**
@@ -2540,16 +2857,22 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
   - **Evaluation Lab:** run comparison and metric drill-down to the trace (the operational
     dashboard is already delivered by the Supervisor Console in Phase 6).
   - **Security:** the full negative suite (tenant and platform), a dependency and vulnerability
-    scan, a Next.js support-status check, and the threat model review.
+    scan, a Next.js support-status and advisory check, and the threat model review.
+  - **Gate G-WEB (ADR-017):** the written public-deployment security report and the owner's
+    decision: (a) 14.2.35 with mitigations, (b) a 14.2.35 static export, or (c) upgrade to a
+    supported LTS first. **No public deployment happens before this decision.**
   - **Performance:** a performance smoke test against Supabase Cloud Free.
-  - **Demo deployment:** `supabase db push` to the Cloud Free project, demo compose with Caddy on
-    the Oracle VM, the provisioning script, nightly `supabase db dump` and Storage export,
-    restore drill, and a demo-reset command.
+  - **Demo deployment (only as the G-WEB decision allows):** `supabase db push` to the Cloud
+    Free project, demo compose with Caddy on the Oracle VM, the provisioning script, nightly
+    `supabase db dump` and Storage export, restore drill, and a demo-reset command. The demo
+    uses the mock or a permitted free tier, never the paid key (D50).
   - **No-LLM rehearsal:** the full pitch script passes with the mock provider only.
   - **Runbooks** (including "Supabase project paused" and "VM reclaimed") and a **documented
     limitations** list.
-- **Demo:** a shareable HTTPS demo, plus a scripted pitch walkthrough in Arabic and English.
+- **Demo:** a shareable HTTPS demo, only if G-WEB allows it (otherwise a private demo), plus a
+  scripted pitch walkthrough in Arabic and English.
 - **Exit:**
+  - The G-WEB decision is recorded, and X2 is re-approved, ended, or replaced by an upgrade.
   - All hard gates pass.
   - The full CCRB report is published in the Evaluation Lab.
   - A restore from the off-site dump into a fresh Supabase project (or the local stack) is
@@ -2582,13 +2905,17 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
 **Schedule-sensitive dependencies:**
 
 - Supabase pooler and driver behavior with `SET LOCAL` (Phase 1)
-- React 19 compatibility of the UI kit and chart library (Phase 1)
-- Free-tier LLM limits (Phase 4)
+- React 18 compatibility of the UI kit and chart library, and Next.js 14.2.35 on Node 24
+  (Phase 1)
+- DeepSeek activation approval for paid smoke and validation runs (Phase 1 and Phase 4)
+- Free-tier LLM limits for CI, nightly runs, and demos (Phase 4)
 - LangGraph checkpointer extensibility (Phase 4)
 - The G-NEO decision (end of Phase 3); adopting Neo4j adds a separately planned feature
 - Supabase Free database and compute limits for console aggregates (Phase 6)
 - Oracle A1 capacity in the region (Phase 9)
-- Next.js 16.x leaving Active LTS when 17.x ships (any phase; ADR-017 policy)
+- A new Next.js advisory affecting 14.x with no mitigation (any phase; X2 review trigger)
+- The G-WEB decision before any public deployment (Phase 9 at the latest)
+- Python 3.11 end of security support in 2027-10 (R19)
 
 ---
 
@@ -2601,16 +2928,19 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
    (check only; editing it is a Phase 1 task).
 2. The public GitHub repository exists (D29). Apply the public-repo controls first (D44, each a
    separately approved task).
-3. `/speckit-constitution` for the amendments A1–A6: **done** (v1.3.0, 2026-10-20). Owner
-   ratification is still pending.
+3. `/speckit-constitution` for the amendments: **done** for A1–A6 (v1.3.0, 2026-10-20) and
+   B1–B5 (v2.0.0, 2026-10-21), applied to the proposed text only. Owner ratification of v2.0.0,
+   together with approval of this plan, is still pending (Q1).
 4. `/speckit-specify` for Phase 1.
 
 **Toolchain:**
 
-- **Python:** 3.12 via uv. The existing `.conda` 3.11 is unused.
-- **Node:** 24.19.0 is installed. `next@16.4.2` requires Node ≥20.9.0 [FACT, npm, 2026-10-20], so
-  the engines range is satisfied. Runtime compatibility of the full toolchain on Node 24 is
-  confirmed in Phase 1; the fallback is Node 22 LTS via nvm-windows.
+- **Python:** **3.11.x** via uv (D48). The exact patch (3.11.16 uv-managed or 3.11.17 upstream)
+  is pinned in `.python-version` after the Phase 1 smoke test (ADR-022). The existing `.conda`
+  (3.11.17) is not used as the project toolchain.
+- **Node:** 24.19.0 is installed. `next@14.2.35` declares `engines.node >=18.17.0` [FACT, npm,
+  2026-10-21]. Running 14.2.35 on Node 24 is **[UNVERIFIED]** and is confirmed by a Phase 1
+  smoke test; the fallback is Node 22 LTS via nvm-windows.
 - **Other tools:** Docker Desktop and the Supabase CLI (local stack, migrations, `db push`,
   `db dump`, `test db`).
 - **Optional:** Ollama and `just`.
@@ -2621,31 +2951,38 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
 
 | Variable | Purpose |
 |----------|---------|
-| `SERVIO_AI_ENV` | `local` / `ci` / `demo` |
-| `SERVIO_AI_DATABASE_URL` | API/worker connection to Supabase PostgreSQL as `servio_ai_app` |
-| `SERVIO_AI_PLATFORM_DATABASE_URL` | Platform API connection as `servio_ai_platform` (ADR-019) |
-| `SERVIO_AI_MIGRATION_DATABASE_URL` | Migration connection for `supabase db push` / `supabase db dump` (CI and owner only) |
-| `SERVIO_AI_SUPABASE_URL` / `SERVIO_AI_SUPABASE_JWT_SECRET` or `SERVIO_AI_SUPABASE_JWKS_URL` | JWT verification |
-| `SERVIO_AI_SUPABASE_SERVICE_ROLE_KEY` | Storage admin operations from the backend only (never in the frontend, never for tenant queries) |
-| `SERVIO_AI_STORAGE_BUCKET` | Object bucket name |
-| `SERVIO_AI_GRAPH_BACKEND` | `postgres` (default); `neo4j` only if G-NEO adopts it |
-| `SERVIO_AI_NEO4J_URI` / `SERVIO_AI_NEO4J_USER` / `SERVIO_AI_NEO4J_PASSWORD` | Graph connection, **only** for the G-NEO PoC or if Neo4j is adopted |
-| `SERVIO_AI_RESEARCH_PROVIDERS` | e.g. `synthetic_corpus` (default); live providers only with owner approval |
-| `SERVIO_AI_SUPPORT_GRANT_MAX_HOURS` | Support-grant ceiling (default 4; may be lowered, never raised above 4, D38) |
-| `SERVIO_AI_BACKUP_TARGET` | Off-site location for nightly dumps |
-| `SERVIO_AI_LLM_PROVIDER_CHAIN` | e.g. `gemini,groq,ollama,mock` |
-| `SERVIO_AI_GEMINI_API_KEY`, `SERVIO_AI_GROQ_API_KEY`, `SERVIO_AI_OPENROUTER_API_KEY`, `SERVIO_AI_DEEPSEEK_API_KEY`, `SERVIO_AI_OPENAI_API_KEY` | Provider keys (optional) |
-| `SERVIO_AI_OLLAMA_BASE_URL` | Local runtime |
-| `SERVIO_AI_EMBEDDING_MODEL` / `SERVIO_AI_EMBEDDING_DEVICE` | Embedding model / `cuda` or `cpu` |
-| `SERVIO_AI_CREDENTIALS_KEY` | AES key for connector credentials |
-| `SERVIO_AI_RUN_MAX_TOKENS`, `SERVIO_AI_RUN_MAX_STEPS`, `SERVIO_AI_RUN_TIMEOUT_S` | Workflow budgets |
-| `SERVIO_AI_TENANT_DAILY_TOKEN_BUDGET` | Quota guard |
-| `SERVIO_AI_OTEL_EXPORTER_OTLP_ENDPOINT` | Optional Jaeger |
-| `SERVIO_AI_LOG_LEVEL` | Logging |
-| `SERVIO_AI_CORS_ORIGINS` | Allowed web origins |
-| `NEXT_PUBLIC_SERVIO_AI_API_BASE_URL` | Browser → API |
-| `NEXT_PUBLIC_SERVIO_AI_SUPABASE_URL` / `NEXT_PUBLIC_SERVIO_AI_SUPABASE_ANON_KEY` | Sign-in only (the anon key is public by design) |
-| `NEXT_PUBLIC_SERVIO_AI_DEFAULT_LOCALE` | `ar` |
+| `SERVIO_ENV` | `local` / `ci` / `demo` |
+| `SERVIO_DATABASE_URL` | API/worker connection to Supabase PostgreSQL as `servio_ai_app` |
+| `SERVIO_PLATFORM_DATABASE_URL` | Platform API connection as the `servio_ai_platform_app` role (ADR-018, ADR-019) |
+| `SERVIO_MIGRATION_DATABASE_URL` | Migration connection for `supabase db push` / `supabase db dump` (CI and owner only) |
+| `SERVIO_SUPABASE_URL` / `SERVIO_SUPABASE_JWT_SECRET` or `SERVIO_SUPABASE_JWKS_URL` | JWT verification |
+| `SERVIO_SUPABASE_SERVICE_ROLE_KEY` | Storage admin operations from the backend only (never in the frontend, never for tenant queries) |
+| `SERVIO_STORAGE_BUCKET` | Object bucket name |
+| `SERVIO_GRAPH_BACKEND` | `postgres` (default); `neo4j` only if G-NEO adopts it |
+| `SERVIO_NEO4J_URI` / `SERVIO_NEO4J_USER` / `SERVIO_NEO4J_PASSWORD` | Graph connection, **only** for the G-NEO PoC or if Neo4j is adopted |
+| `SERVIO_RESEARCH_PROVIDERS` | e.g. `synthetic_corpus` (default); live providers only with owner approval |
+| `SERVIO_SUPPORT_GRANT_MAX_HOURS` | Support-grant ceiling (default 4; may be lowered, never raised above 4, D38) |
+| `SERVIO_BACKUP_TARGET` | Off-site location for nightly dumps |
+| `SERVIO_LLM_PROVIDER_CHAIN` | `mock` (CI and demos); `deepseek,ollama,mock` for authorized local runs only after activation approval (D49, D50) |
+| `SERVIO_DEEPSEEK_ENABLED` | `false` by default; the adapter refuses to start when `SERVIO_ENV` is `ci` or `demo` (ADR-007) |
+| `SERVIO_DEEPSEEK_MODEL` | `deepseek-flash` (default) |
+| `SERVIO_LLM_PAID_CAP_USD` / `SERVIO_LLM_PAID_REVIEW_PCT` | Paid-testing cap (proposed `5`, D50) and owner-review threshold (`80`) |
+| `SERVIO_DEEPSEEK_API_KEY` | Paid key, local and authorized only; never in CI, demos, the repository, or any `NEXT_PUBLIC_` variable |
+| `SERVIO_GEMINI_API_KEY`, `SERVIO_GROQ_API_KEY`, `SERVIO_OPENROUTER_API_KEY`, `SERVIO_OPENAI_API_KEY` | Optional provider keys (free tiers only, unless a paid use is approved) |
+| `SERVIO_OLLAMA_BASE_URL` | Local runtime |
+| `SERVIO_EMBEDDING_MODEL` / `SERVIO_EMBEDDING_DEVICE` | Embedding model / `cuda` or `cpu` |
+| `SERVIO_CREDENTIALS_KEY` | AES key for connector credentials |
+| `SERVIO_RUN_MAX_TOKENS`, `SERVIO_RUN_MAX_STEPS`, `SERVIO_RUN_TIMEOUT_S` | Workflow budgets |
+| `SERVIO_TENANT_DAILY_TOKEN_BUDGET` | Quota guard |
+| `SERVIO_OTEL_EXPORTER_OTLP_ENDPOINT` | Optional Jaeger |
+| `SERVIO_LOG_LEVEL` | Logging |
+| `SERVIO_CORS_ORIGINS` | Allowed web origins |
+| `NEXT_PUBLIC_SERVIO_API_BASE_URL` | Browser → API (intentionally public) |
+| `NEXT_PUBLIC_SERVIO_SUPABASE_URL` / `NEXT_PUBLIC_SERVIO_SUPABASE_ANON_KEY` | Sign-in only (the anon key is public by design and is the only allow-listed key-like `NEXT_PUBLIC_` value) |
+| `NEXT_PUBLIC_SERVIO_DEFAULT_LOCALE` | `ar` |
+
+Every `NEXT_PUBLIC_SERVIO_<NAME>` value is visible to every browser and must never be a secret
+(D46, ADR-016).
 
 **Migrations (D28):**
 
@@ -2667,21 +3004,25 @@ sequenced after Phase 6 by default to protect the headline demo and the console.
    grant allow-lists, platform separation, aggregate functions).
 4. **Integration tests:** against the same Supabase CLI stack (Postgres with pgvector, Auth or a
    JWT stub signed with a test key, Storage). No Neo4j service unless G-NEO adopts it.
-5. **Security checks:** the cross-tenant and platform suites, gitleaks, pip-audit, npm audit, a
-   Next.js support-status check, and an OpenAPI diff check against `packages/api-contract`.
+5. **Security checks:** the cross-tenant and platform suites, gitleaks, pip-audit, `npm audit`
+   compared with the X2 advisory baseline, a Next.js support-status check, the X2 mitigation
+   checks (no `"use server"`, `images.unoptimized`), the `NEXT_PUBLIC_` secret check, and an
+   OpenAPI diff check against `packages/api-contract`.
 6. **Playwright E2E** (AR and EN) against the mock provider, including console states.
 7. **Eval B0** and `console-kpi-v1`.
-8. **Nightly:** eval B2 when the quota allows.
+8. **Nightly:** eval B2-free when the quota allows. **CI never holds or uses the paid DeepSeek
+   key** (D50).
 
-**Deployment (hosted demo):**
+**Deployment (hosted demo):** nothing is deployed before the owner approves it. The web tier is
+not exposed publicly until the G-WEB decision (ADR-017).
 
 - Data tier: `supabase db push` to the Supabase Cloud Free project, then `cli seed --tenant demo`.
 - App tier: the `deploy/vm/provision.sh` script (to be written in Phase 9) installs Docker and
-  pulls the `servio-ai-*` images, built for `linux/arm64` with buildx in CI.
+  pulls the `servio-*` images, built for `linux/arm64` with buildx in CI.
 - `docker compose -f docker-compose.demo.yml up -d` (web, API, worker, Caddy).
 - Health checks gate Caddy routing.
 - A nightly job on the VM runs `supabase db dump` and the Storage export to
-  `SERVIO_AI_BACKUP_TARGET`.
+  `SERVIO_BACKUP_TARGET`.
 
 ---
 
@@ -2746,7 +3087,7 @@ bundle secret check.
 |---|------|-----|-----|------------|------------------------|
 | R1 | Free LLM tiers change, throttle, or disappear, so the demo fails live | High | Medium | Fallback chain, the local 4B model, mock "demo-safe" mode with recorded runs, pre-warmed demo, laptop fallback | Approve a paid budget only if the pitch requires it (later) |
 | R2 | Scope (12 modules, comprehensive Supervisor Console, Platform Admin Console, bilingual) exceeds one developer's capacity | High | High | Vertical slices, per-module MVP minimum and explicit deferrals (§3.3a, §3.7.4), thin J and K on synthetic sources, fixed roles, no custom agent editor or dashboard builder, console panels built with the data in each phase | Re-prioritize at each phase exit; **moving any item between MVP and deferred needs approval** (§0.5) |
-| R3 | Next.js 16 / React 19 ecosystem incompatibilities (UI kit, charts, next-intl edge cases) | Medium | Medium | Verify in the Phase 1 plan; pin versions; replace an incompatible library rather than downgrading the framework | No, unless a downgrade to an older major is proposed |
+| R3 | **Next.js 14.2.35 is Unsupported upstream** and has advisories with no 14.x patch (Critical RCE CVE-2026-96889, High DoS GHSA-p3m5-59mp-jv5r). An exploit on an exposed web tier could pivot to the VM, the API, or `.env`. More advisories may follow, and the 14 → 16 upgrade gets harder the longer it is delayed. | **High** | Medium | Exception X2 limited to development and private demos; mandatory mitigations (ADR-017), which are **not patches**; web container isolated with no secrets; advisory checks at every phase exit; static-export and Next 16 spikes in Phase 1; a thin frontend; no public deployment before G-WEB | **Yes**, at G-WEB and at any review trigger |
 | R4 | The G-NEO decision adds late scope, or PostgreSQL graph queries prove too slow | Medium | Low | MVP never depends on Neo4j; PoC is time-boxed with measurable criteria; `GraphRepository` keeps both options open | **Yes**, at G-NEO (Q7) |
 | R5 | Oracle VM reclaimed or no A1 capacity | Medium | Medium | Scripted rebuild, data safe in Supabase Cloud and off-site dumps, laptop fallback | No |
 | R6 | Arabic retrieval and structured-output quality is weak with small or free models | High | Medium | bge-m3, normalization, CitationGuard, evaluation gates, the Phase 4 model spike | No |
@@ -2759,7 +3100,11 @@ bundle secret check.
 | R13 | Supabase vendor coupling (Auth, Storage, CLI migrations) | Medium | Medium | Plain SQL migrations portable to any PostgreSQL; auth contained in `platform/security`; storage behind a provider interface | No |
 | R14 | Self-hosted Supabase on ARM64 not supported for some images (fallback path only) | Low | Low | Only matters if Cloud Free is unusable; the laptop is the final fallback | No |
 | R15 | Public repository exposes a secret, real data, or commit metadata (D29) | High | Medium | No secrets or real data committed (verified clean on 2026-10-20), gitleaks CI, GitHub push protection, hardened `.gitignore`, noreply commit email, private security advisories; revoke and rotate first if a secret leaks | Yes, for any history rewrite or visibility change |
-| R16 | DeepSeek data handling or processing location unsuitable, or spend exceeds the cap (D32) | Medium | Medium | Synthetic data only, terms verified before top-up, $5 prepaid hard cap with no auto-recharge, key only in the environment | Yes, for spend beyond $5 or any non-synthetic data |
+| R16 | DeepSeek, the selected primary (D49): data is processed in the PRC and inputs may be used for training (opt-out); the API-specific terms are unverified; spend could exceed the cap; the provider could become unavailable | Medium | Medium | Synthetic data only; activation gate with terms and opt-out recorded first (ADR-007); proposed USD 5 cap, 80% review, stop at 100%; no paid key in CI or demos; mock and free-tier fallbacks; the provider abstraction keeps OpenAI and others pluggable | Yes: activation, any spend beyond the cap, any non-synthetic data |
+| R19 | Python 3.11 reaches end of security support in **2027-10**, about 12 months after this plan | Medium | High | Pin 3.11.x now as instructed (D48). Plan a minor upgrade (3.12 or later) before 2027-10, through ADR-022, and keep dependencies within ranges that also support newer Pythons. | Yes, to schedule the upgrade |
+| R20 | The Next.js 14 toolchain needs ESLint 8 (`eslint-config-next@14` peers `^7 \|\| ^8`), which is past its upstream end of life | Low | High | Lint is a development tool only, pinned; replaced as part of the G-WEB upgrade path | No |
+| R21 | Phase 1 scope growth (L → XL) from the provider foundation (D49) and the X2 spikes | Medium | Medium | Minimal `ChatModel` interface and smoke test only; spikes time-boxed in throwaway branches | Re-prioritize at the Phase 1 plan |
+| R22 | Python 3.11 runtime incompatibility discovered after the metadata-only resolution | Low | Low | Phase 1 import and smoke test before pinning the patch (ADR-022) | Only if 3.11 proves unworkable |
 | R17 | No live research source is verifiably $0, or a source changes terms, throttles, or returns stale or conflicting data (D41) | Medium | Medium | Adapter disabled by default, terms verified before enablement, source-state handling, labelled synthetic fallback, recorded synthetic-only exception | Yes, to enable an adapter or accept the exception |
 | R18 | The 20-day audit window is too short to investigate an incident (D34) | Medium | Low | Hash-chain checkpoints, decision records kept for the tenant's life, review before any extension or pilot | Yes, to change retention |
 
@@ -2769,7 +3114,11 @@ bundle secret check.
 |----------|---------------------|
 | Q1: `servio_ai` naming (ADR-018) | **Resolved (D30)**: approved |
 | Q2: Git and GitHub | **Resolved (D29)**: public repository with controls |
-| Q3: Primary LLM | Phase 4 spike, including DeepSeek ($5 cap, D31, D32) |
+| Q3: Primary LLM | **Resolved (D49)**: DeepSeek, `deepseek-flash`. Phase 4 validates it against the mock baseline. |
+| DeepSeek activation and cap (D50) | Record the five ADR-007 checks, then explicit owner approval of the scope and the USD 5 cap before any paid call |
+| G-WEB: public deployment of Next.js 14.2.35 | Gate report at Phase 9 at the latest. Recommendation rule in ADR-017: if advisories remain unresolved and no static-export path exists, upgrade to a supported LTS first. |
+| Python 3.11 patch (ADR-022) | Choose 3.11.16 (uv-managed) or 3.11.17 after the Phase 1 smoke test |
+| Derived schema and role names (ADR-018, D52) | Approve together with this plan |
 | Q4: Retention | **Resolved (D34)**: 20 days audit and traces, with checkpoints |
 | Q5: Pilot policy | **Resolved (D35)**: separate pilot-readiness review; no real data now |
 | Q6: Brand | **Resolved (D36)**: neutral styling, open Arabic font (exact font in the Phase 1 plan) |
@@ -2783,7 +3132,7 @@ bundle secret check.
 | Job library | Hand-written queue vs `procrastinate` vs Supabase Queues (`pgmq`), decided in the Phase 2 plan |
 | Task runner | `just` |
 | Deployed secret manager | Deferred until production |
-| UI component kit version | Verify React 19 compatibility in the Phase 1 plan |
+| UI component kit and chart versions | Pin React 18-compatible releases in the Phase 1 plan |
 | Supabase regions | Choose the Cloud Free region near the VM and audience at Phase 1 setup |
 
 ---
@@ -2793,23 +3142,27 @@ bundle secret check.
 The owner marks each item **Approve / Reject / Revise**.
 
 - [ ] Owner decisions D1–D28 are recorded correctly, including the superseded D7 and D12 (§0.1, §0.1a)
-- [ ] Owner decisions D29–D44 are recorded correctly, including the superseded D25 (§0.1b)
-- [ ] The decision register statuses (§0.4) and the owner approval policy (§0.5)
-- [ ] Constitution amendments A1–A6 as applied in constitution v1.3.0: A1 (vertical-slice roadmap, phases 0–9), A2 (configurable providers, data-handling declarations, mock fallback, paid-use cap), A3 (baseline additions, Supabase CLI migrations), A4 (supported Next.js LTS), A5 (PostgreSQL graph by default), A6 (platform trust domain, MFA, support grants, no break-glass)
-- [ ] Ratify constitution v1.3.0 (separate owner act)
-- [ ] Exception X1 stays **conditional** on G-NEO; exception X2 is **withdrawn**
+- [ ] Owner decisions D29–D44 are recorded correctly, including the superseded D25 and the newly superseded or amended D30 (name part), D31, and D32 (§0.1b)
+- [ ] Owner decisions D45–D52 are recorded correctly (§0.1c), including the superseded D18 and D18-v
+- [ ] The decision register statuses (§0.4) and the owner approval policy (§0.5, now with items 7 and 8)
+- [ ] Constitution amendments A1–A6 (v1.3.0; A4 superseded by B2) and B1–B5 (v2.0.0) as applied to the proposed text: B1 (Servio identity), B2 (Next.js 14.2.35 under X2), B3 (Python 3.11.x), B4 (DeepSeek primary, proposed cap), B5 (open decisions and records)
+- [ ] Ratify constitution v2.0.0 together with approving this plan v0.4.0 (separate owner act, Q1)
+- [ ] Exception X1 stays **conditional** on G-NEO; exception X2 is **reinstated** for development and private demos only, with the ADR-017 mitigations and review triggers
+- [ ] Gate G-WEB: no public deployment until the gate report and an explicit owner decision
+- [ ] D50 cost controls: the proposed USD 5 cap, the paid key only for authorized local dev and eval runs, 80% review (activation is a separate approval)
 - [ ] ADR-001: modular monolith in a monorepo
 - [ ] ADR-002: Supabase PostgreSQL as the authoritative system of record; Supabase Auth and Storage; CLI locally, Cloud Free for the demo, self-host as fallback
 - [ ] ADR-003: RLS + `SET LOCAL` tenant context with non-bypass app and platform roles
 - [ ] ADR-004: pgvector + FTS hybrid retrieval with Arabic normalization
 - [ ] ADR-005: PostgreSQL temporal graph for the MVP; G-NEO PoC scope and decision criteria
 - [ ] ADR-006: LangGraph with deterministic gates and the Postgres checkpointer
-- [ ] ADR-007: provider abstraction, the $0 fallback chain, no-LLM demo mode, and the data-classification gate
+- [ ] ADR-007: provider abstraction, DeepSeek primary with the activation gate and cost controls, no-LLM demo mode, and the data-classification gate
 - [ ] ADR-008: connector contract; ADR-009: Postgres job queue; ADR-010: outbox sync (conditional on G-NEO)
 - [ ] ADR-011: side-effect safety; ADR-012: OTel observability; ADR-013: in-house evaluation
 - [ ] ADR-014: local topology; ADR-015: Supabase Cloud Free + Oracle Always Free demo; ADR-016: secrets
-- [ ] ADR-017: Next.js 16.x version policy, next-intl, logical CSS for i18n and RTL; ADR-018: identifier forms
+- [ ] ADR-017: Next.js 14.2.35, exception X2, gate G-WEB, migration plan, next-intl, logical CSS for i18n and RTL; ADR-018: identifier forms, `NEXT_PUBLIC_SERVIO_<NAME>`, derived schemas and roles
 - [ ] ADR-019: platform administration and support access; ADR-020: console metrics; ADR-021: research provider interface and provenance
+- [ ] ADR-022: Python 3.11.x and the pinned dependency set (resolution evidence; runtime verification in Phase 1)
 - [ ] The seven tenant roles, the system-only `support_readonly` role, the two platform roles, and both permission matrices (§3.2), including four-eyes by default
 - [ ] Per-module MVP minimums and deferrals (§3.3a)
 - [ ] Supervisor Console scope, KPI definitions, and deferrals (§3.7); Platform Admin Console and support grants (§3.8)
@@ -2824,7 +3177,43 @@ The owner marks each item **Approve / Reject / Revise**.
 
 ## Closing Statement (planning assignment)
 
+### Revision 0.4.0 (2026-10-21)
+
+1. **Verified during this revision (read-only):**
+   - Next.js 14.2.35 metadata (npm).
+   - The advisories CVE-2026-96889 and GHSA-p3m5-59mp-jv5r, which affect 14.x with no 14.x
+     patch (GitHub advisory pages; to be re-confirmed by `npm audit`).
+   - The peer ranges of the frontend set.
+   - Python release status.
+   - A `uv pip compile` dry run of the backend pins for Python 3.11 on Linux and Windows (60
+     packages, exit 0, nothing installed).
+   - DeepSeek pricing and privacy policy.
+2. **Still unverified:**
+   - Python 3.11 runtime behavior and the exact patch.
+   - Next.js 14.2.35 on Node 24.
+   - The static-export feasibility.
+   - React 18 versions of the UI kit and chart library.
+   - The DeepSeek API training default, the opt-out procedure, and enforcement of a prepaid
+     limit.
+   - Whether the 15.x and 16.x-only advisories really exclude 14.x.
+3. **Applied to the documents only:**
+   - Constitution v2.0.0 (Python row revised to 3.11.x, cap wording, X2 scope; still
+     **Proposed, unratified**).
+   - This plan v0.4.0.
+4. **Pending owner actions and decisions:**
+   - Approve this plan and ratify the constitution together (Q1).
+   - DeepSeek activation and the USD 5 cap (D50).
+   - G-WEB, before any public deployment.
+   - G-NEO (Q7).
+   - Enabling a live Market Intelligence adapter (D41).
+   - The public-repo control tasks (D44).
+5. **Not done:** no application code, package installation, migration, billing, deployment,
+   commit, push, or change to the Git remote or repository visibility.
+
 ### Revision 0.3.0 (2026-10-20)
+
+*Historical record. Where it conflicts with revision 0.4.0 (product name, Next.js version, Python
+version, DeepSeek status, budget scope), revision 0.4.0 applies.*
 
 1. **Verified during the amendment review (read-only):**
    - The GitHub repository is public (GitHub API).
@@ -2852,6 +3241,9 @@ The owner marks each item **Approve / Reject / Revise**.
    the amendments changed only `.specify/memory/constitution.md`.
 
 ### Revision 0.2.0 (2026-10-20)
+
+*Historical record. Its Next.js 16.x selection and LLM choices are superseded by revision 0.4.0
+(D47, D49).*
 
 1. **Re-verified from official sources on 2026-10-20:** Next.js support policy and the latest
    16.x release; next-intl peer range; Supabase Free-plan limits, pausing and restore window,
