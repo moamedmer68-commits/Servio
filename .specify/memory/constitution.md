@@ -1,36 +1,40 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 1.2.0 (proposed, unratified) → 1.3.0 (proposed, unratified)
-Bump rationale: MINOR. Amendments A1–A6 (owner-approved for application on 2026-10-20) add
-  rules (A2 provider data controls, A3 migration discipline, A6 platform trust boundary and the
-  break-glass prohibition) and change Technology Baseline rows that ADRs govern (A3, A4, A5).
-  A1 replaces the phase list, which this constitution already allows to change with owner
-  approval. No principle is removed or weakened, and the project name is unchanged, so this is
-  not a MAJOR change.
+Version change: 1.3.0 (proposed, unratified) → 2.0.0 (proposed, unratified)
+Bump rationale: MAJOR. The project identity is redefined: the canonical name changes from
+  "Servio AI" to "Servio", and the permitted identifier forms change incompatibly (`ServioAI` →
+  `Servio`, `servio-ai` → `servio`, `SERVIO_AI_` → `SERVIO_`). Every artifact that uses these
+  forms must be updated. The Baseline rule on unsupported framework majors is also redefined to
+  allow only an approved, time-boxed security exception. No core principle is removed.
 
-Amendments applied:
-  A1 Delivery Workflow → Roadmap: Phase 0 plus nine vertical-slice execution phases; UI built in
-     every phase; Phase 6 = Supervisor Console and Platform Admin Console (Principle I aligned)
-  A2 Principle VIII: configurable providers incl. deterministic mock; declared data handling;
-     classification gate; no-external-LLM fallback; paid usage needs approved scope and cap
-  A3 Technology Baseline: Python 3.12 (proposed, pending verification), PostgreSQL job queue,
-     Supabase CLI SQL migrations, OpenTelemetry; migration-discipline rule
-  A4 Technology Baseline: Next.js 14.x → supported Next.js LTS (Active LTS preferred)
-  A5 Technology Baseline, Principles III and V: PostgreSQL temporal graph by default; Neo4j
-     optional derived store only after G-NEO, an ADR, and owner approval
-  A6 Principle III: separate platform trust domain, MFA, tenant-approved support grants
-     (read-only by default, at most four hours, audited), no break-glass path
+Amendments in 2.0.0 (owner decisions D45–D51, 2026-10-21; applied to the proposed text only):
+  B1 Project identity: canonical name `Servio`; descriptor kept as tagline; machine forms
+     `Servio`, `servio`, `SERVIO_`; `servio_ai` kept for the Postgres schema, database roles, and
+     the Python import package; "Servio AI" added to the historical names
+  B2 Technology Baseline, Frontend: Next.js 14.2.35 with React 18.3.1 (owner-required,
+     Unsupported upstream) under time-boxed security exception X2 (ADR-017); unsupported majors
+     permitted only under an approved, time-boxed exception recorded in an ADR
+  B3 Technology Baseline, Backend runtime: Python 3.12 confirmed (3.12.15); dependency resolution
+     verified 2026-10-21 (ADR-022)
+  B4 Technology Baseline, Model providers: DeepSeek (`deepseek-flash`) is the selected primary
+     provider; OpenAI, other approved providers, local runtimes, and the mock stay configurable;
+     paid use limited to the approved $5 prepaid cap (synthetic data only)
+  B5 Open decisions updated; Governance records the 2026-10-21 owner decisions
+Approval-record correction: the 1.3.0 report said amendments A1–A6 were "owner-approved for
+  application". Accurate wording: A1–A6 were approved for application to the proposed text on
+  2026-10-20; they were not ratified. The same applies to B1–B5.
 
-Modified principles (titles unchanged): I (roadmap reference), III (A5, A6), V (A5), VIII (A2)
-Unchanged principles: II, IV, VI, VII, IX, X, XI, XII
-Modified sections: Technology Baseline (rows, migration rule, open decisions); Delivery
-  Workflow → Roadmap; Governance (recorded owner decisions, amendment history); version footer
+Modified principles (titles unchanged): II (name only); no rule in any principle changed
+Unchanged principles: I, III, IV, V, VI, VII, VIII, IX, X, XI, XII
+Modified sections: preamble and Project identity; Technology Baseline (Frontend, Backend runtime,
+  Model providers rows, unsupported-major rule, open decisions); Governance (name, recorded owner
+  decisions, amendment history); version footer
 Added sections: none
 Removed sections: none
-Resolved items: background job mechanism, migration tool, observability stack, frontend version
-  policy, and default graph store (moved from open decisions to the Baseline); identifier forms
-  for restricted contexts and the `SERVIO_AI_` prefix combination (delegated to ADR-018).
+Unchanged: PostgreSQL remains the relational system of record and default temporal graph store;
+  Neo4j remains optional behind G-NEO, an approved ADR, and explicit owner approval.
+Resolved items: Python version confirmation; primary LLM provider (embedding model still open).
 
 Dependent templates:
   ✅ .specify/templates/plan-template.md: no edit required; its "Constitution Check" gate and
@@ -43,6 +47,9 @@ Deferred items / follow-up TODOs:
   TODO(RATIFICATION_DATE): Set only when the project owner explicitly approves a final version.
     Until then the status of this document is "Proposed".
   Open decisions to be settled by ADR during master planning (see Technology Baseline).
+  Exception X2 (Next.js 14.2.35) must be re-approved before the Phase 9 hosted demo, before any
+    real-data pilot, or when a new Critical/High advisory affecting 14.x has no mitigation.
+  Master Plan and ADR-007, ADR-017, ADR-018, ADR-022 must reflect B1–B4 (Master Plan v0.4.0).
 -->
 
 <!-- Owner brief → constitution mapping (v1.0.0 brief A–S):
@@ -53,31 +60,31 @@ Deferred items / follow-up TODOs:
 -->
 
 
-# Servio AI Constitution
+# Servio Constitution
 
-Servio AI (Verified Enterprise Reasoning & Intelligent Task Automation System) is a multi-tenant
+Servio (Verified Enterprise Reasoning & Intelligent Task Automation System) is a multi-tenant
 enterprise AI platform. It combines evidence-grounded reasoning, Hybrid RAG, a temporal knowledge
 graph, multi-agent orchestration, safe business automation, Market Intelligence and Idea
 Intelligence, all delivered through an Arabic-first, bilingual (Arabic and English) interface.
 
-**Project identity.** The single canonical project name is **Servio AI**, with the full-name
-descriptor *Verified Enterprise Reasoning & Intelligent Task Automation System*. All active
-documentation, configuration, metadata, prompts, and UI branding MUST use "Servio AI" with
-exactly this spelling and capitalization. Only the forms below MAY be used, each only in its
-stated context:
+**Project identity.** The single canonical project name is **Servio**, with the descriptor
+(tagline) *Verified Enterprise Reasoning & Intelligent Task Automation System*. All active
+documentation, configuration, metadata, prompts, and UI branding MUST use "Servio" with exactly
+this spelling and capitalization. Only the forms below MAY be used, each only in its stated
+context:
 
 | Form | Context | Usage rules |
 |------|---------|-------------|
-| `Servio AI` | Human-readable name | Required in all prose, UI branding, metadata, and prompts |
-| `ServioAI` | Mixed-case identifiers that cannot contain a space (e.g., code identifiers) | Used only where a space is not permitted and mixed case is allowed |
-| `servio-ai` | Identifiers that require lowercase (e.g., package, image, or project names) | Lowercase with a hyphen, exactly as shown. A component-specific identifier MUST begin with `servio-ai`; its full form is defined in the Master Plan |
-| `SERVIO_AI_` | Prefix for project-defined environment variables | Full names follow `SERVIO_AI_<NAME>`, where `<NAME>` uses uppercase letters, digits, and underscores. Variables whose names are dictated by an external framework, library, or provider keep the name that tool requires. How the prefix combines with a framework-required prefix (e.g., Next.js `NEXT_PUBLIC_`) MUST be decided in an ADR |
+| `Servio` | Human-readable name and mixed-case identifiers (e.g., code identifiers) | Required in all prose, UI branding, metadata, and prompts; also used where a mixed-case identifier is needed |
+| `servio` | Identifiers that require lowercase (e.g., package, image, or project names) | Lowercase, exactly as shown. A component-specific identifier MUST begin with `servio-`; its full form is defined in the Master Plan |
+| `SERVIO_` | Prefix for project-defined environment variables | Full names follow `SERVIO_<NAME>`, where `<NAME>` uses uppercase letters, digits, and underscores. Variables whose names are dictated by an external framework, library, or provider keep the name that tool requires. How the prefix combines with a framework-required prefix (e.g., Next.js `NEXT_PUBLIC_`) MUST be decided in an ADR |
+| `servio_ai` | Internal database and Python identifiers: the PostgreSQL schema, database roles, and the Python import package | Owner-approved internal identifier (2026-10-20, retained 2026-10-21). It is not a product name and MUST NOT appear in prose or UI branding. Derived names are defined in ADR-018 |
 
-A context that permits none of these forms (for example, Python import names, which cannot
-contain hyphens) MUST use a form approved by the owner and recorded in an ADR before first use.
-The approved Master Plan MUST record where each identifier form is actually used. The former
-working names "VERITAS AI", "AION", and "ResolveFlow" are historical only. They MUST NOT be used
-as active project names, and any retained reference to them MUST be labeled as historical.
+A context that permits none of these forms MUST use a form approved by the owner and recorded in
+an ADR before first use. The approved Master Plan MUST record where each identifier form is
+actually used. The former names "Servio AI" (canonical until 2026-10-21), "VERITAS AI", "AION",
+and "ResolveFlow" are historical only. They MUST NOT be used as active project names, and any
+retained reference to them MUST be labeled as historical.
 
 **Normative language.** **MUST** / **MUST NOT** are mandatory requirements. A requirement can be
 waived only through the exception process in Governance. **SHOULD** / **SHOULD NOT** are strong
@@ -114,7 +121,7 @@ reference the requirements they satisfy. Reviewers reject work that has no appro
 
 ### II. Clean-Start Modular Architecture and Explicit Boundaries
 
-- Servio AI MUST be built from scratch on a clean, modular application architecture. Existing
+- Servio MUST be built from scratch on a clean, modular application architecture. Existing
   code, repositories, schemas, and UI components MAY be inspected only to understand the
   environment and extract ideas. They MUST NOT be assumed to be retained. Reusing any existing
   code requires explicit owner approval.
@@ -381,9 +388,9 @@ change requires an approved ADR.
 |------|---------|--------|
 | Specification framework | Spec Kit (installed v1.0.1) | Mandatory (Principle I) |
 | Architecture style | Clean-start modular monolith | Default; deviation by approved ADR |
-| Frontend | Next.js, a supported LTS release (Active LTS preferred), with TypeScript | Agreed default. The selected major and exact version are recorded in an ADR and pinned in the lockfile. Compatibility with React, internationalization, UI, and chart dependencies MUST be verified before implementation. Unsupported majors MUST NOT be used. Support status is re-checked at each phase exit |
+| Frontend | Next.js **14.2.35** with React 18.3.1 and TypeScript | Owner decision (2026-10-21). Next.js 14.x is Unsupported upstream and has known advisories with no 14.x patch. It is permitted only under the time-boxed security exception X2 recorded in ADR-017, with that ADR's mandatory mitigations. Exact versions are pinned in the lockfile. Another major MUST NOT be adopted without explicit owner approval. Support status and advisories are re-checked at each phase exit |
 | Backend | Python with FastAPI | Agreed default |
-| Backend runtime | Python 3.12 | Proposed; adopted after compatibility with the pinned FastAPI, LangGraph, and other dependencies is verified (ADR) |
+| Backend runtime | Python 3.12 (3.12.15) | Owner decision (2026-10-21). Dependency resolution on 3.12 verified 2026-10-21 (ADR-022); runtime smoke test in Phase 1. Security-only upstream until 2028-10 |
 | Background jobs | PostgreSQL-backed job queue inside the system-of-record database; no separate message broker | Agreed default; queue library chosen by ADR |
 | Database migrations | Supabase CLI plain-SQL migrations, version-controlled, with database tests | Agreed default |
 | Authentication | Supabase Auth | Agreed default, subject to security review and ADR |
@@ -393,21 +400,25 @@ change requires an approved ADR.
 | Temporal knowledge graph | Modeled in PostgreSQL, the authoritative system of record | Agreed default |
 | Neo4j | Optional derived graph store | Adopted only after the G-NEO comparison, an approved ADR, and explicit owner approval. No MVP capability, test, or exit criterion may depend on it |
 | Agent orchestration | LangGraph (LangChain where useful) | Agreed default |
-| Model providers | Provider abstraction: DeepSeek, OpenAI, other owner-approved cloud providers, local runtimes, deterministic mock | Agreed default; provider selection by evaluation and ADR |
+| Model providers | Provider abstraction: DeepSeek, OpenAI, other owner-approved cloud providers, local runtimes, deterministic mock | **DeepSeek (`deepseek-flash`) is the selected primary provider** (owner decision, 2026-10-21). Paid use is limited to the approved $5 prepaid hard cap with no auto-recharge, synthetic data only (ADR-007). Other providers stay configurable; adding or switching a primary needs an ADR and owner approval |
 | Observability | OpenTelemetry traces with correlation identifiers; structured, redacted logs | Agreed default |
 | Secrets | Environment variables locally; secure secret management when deployed | Mandatory (Principle IX) |
 | Local development and deployment | Docker-based local development; production-ready deployment path | Agreed default; deployment target by ADR |
+
+A framework or runtime major that is unsupported upstream MUST NOT be used, except under an
+approved, time-boxed security exception recorded in an ADR that states its mitigations and
+review triggers (Principle IX).
 
 Every schema change MUST be a reviewed, version-controlled migration. Manual schema changes to
 shared or hosted databases MUST NOT be made. Migrations MUST preserve tenant-isolation controls
 and MUST NOT contain secrets or real customer data.
 
 **Open decisions.** The following are NOT decided by this constitution. They MUST be resolved
-through ADRs approved during master planning (or in the phase that first needs them): exact
-pinned framework and library versions, confirmation of the Python version, the application- and
-database-layer tenant-isolation mechanism, the job-queue library, cloud demo and production
-hosting targets, deployed secret manager, specific LLM and embedding models, local model runtime,
-the G-NEO outcome (Neo4j adoption, edition, and licence), and the ADR storage location.
+through ADRs approved during master planning (or in the phase that first needs them): approval
+of the pinned framework and library versions (ADR-022), the application- and database-layer
+tenant-isolation mechanism, the job-queue library, cloud demo and production hosting targets,
+deployed secret manager, embedding model, local model runtime, the G-NEO outcome (Neo4j
+adoption, edition, and licence), and the ADR storage location.
 
 ### Architecture Decision Records
 
@@ -476,7 +487,7 @@ A feature or phase is complete only when all of the following hold:
 ## Governance
 
 **Authority.** This constitution governs all specifications, plans, tasks, ADRs, implementation,
-testing, security reviews, and deployment activities for Servio AI. It supersedes conflicting
+testing, security reviews, and deployment activities for Servio. It supersedes conflicting
 practices and documents. The project owner retains authority over product scope, major
 architectural choices, security exceptions, significant cost commitments, constitution changes,
 and phase acceptance.
@@ -511,15 +522,20 @@ version. Recording them does not ratify the constitution.
 
 | Date | Decision | Where applied |
 |------|----------|---------------|
-| 2026-10-19 | Canonical project name is `Servio AI` | Project identity |
-| 2026-10-19 | `servio-ai` for lowercase machine identifiers; `SERVIO_AI_` as the environment-variable prefix | Project identity |
+| 2026-10-19 | Canonical project name is `Servio AI` (**superseded 2026-10-21**) | Project identity |
+| 2026-10-19 | `servio-ai` for lowercase machine identifiers; `SERVIO_AI_` as the environment-variable prefix (**superseded 2026-10-21**) | Project identity |
 | 2026-10-19 | English supported in the first release alongside Arabic; Arabic remains default with correct RTL; Master Plan accounts for bilingual first-release scope | Principle XII; Roadmap |
 | 2026-10-19 | Tenant isolation enforced at application and database layers; mechanism by approved ADR | Principle III |
 | 2026-10-19 | Required workflows run without a GPU; GPU acceleration optional | Principle VIII |
-| 2026-10-20 | Canonical name remains `Servio AI`; "VERITAS AI" remains historical | Project identity |
-| 2026-10-20 | Amendments A1–A6 approved for application with the reviewed wording | Roadmap; Principles I, III, V, VIII; Technology Baseline |
+| 2026-10-20 | Canonical name remains `Servio AI`; "VERITAS AI" remains historical (**name superseded 2026-10-21**) | Project identity |
+| 2026-10-20 | Amendments A1–A6 approved for application to the proposed text with the reviewed wording; not ratified (A4 superseded 2026-10-21) | Roadmap; Principles I, III, V, VIII; Technology Baseline |
 | 2026-10-20 | No emergency or break-glass path may bypass tenant approval of support access; adding one requires a constitution amendment | Principle III |
 | 2026-10-20 | Support grants: read-only by default, at most four hours, approved by the tenant owner or an authorized tenant administrator, audited; MFA for platform administration | Principle III |
+| 2026-10-21 | Canonical name `Servio`; machine forms `Servio`, `servio`, `SERVIO_`; `servio_ai` kept for the Postgres schema, database roles, and the Python import package; descriptor kept as the tagline; "Servio AI" is historical | Project identity |
+| 2026-10-21 | Next.js 14.2.35 with React 18.3.1 under time-boxed security exception X2 (ADR-017); no other major without explicit owner approval | Technology Baseline |
+| 2026-10-21 | Python 3.12 (3.12.15) confirmed; dependency resolution verified (ADR-022) | Technology Baseline |
+| 2026-10-21 | DeepSeek (`deepseek-flash`) is the selected primary LLM provider; $5 prepaid hard cap, no auto-recharge, synthetic data only, from Phase 1; activation per ADR-007 | Technology Baseline; Principle VIII |
+| 2026-10-21 | PostgreSQL remains the primary system of record; Neo4j remains optional behind G-NEO, an approved ADR, and explicit owner approval (reaffirmed, unchanged) | Principle V; Technology Baseline |
 
 **Amendment history.**
 
@@ -528,8 +544,9 @@ version. Recording them does not ratify the constitution.
 | 1.0.0 | 2026-10-19 | Initial constitution created from the owner brief (principles A–S) | Proposed; superseded by 1.1.0 before ratification |
 | 1.1.0 | 2026-10-19 | Canonical name set to Servio AI; clean-start rule; agreed technology defaults; local-first, CPU-only, bilingual, RBAC, and database-layer isolation rules | Proposed; superseded by 1.2.0 before ratification |
 | 1.2.0 | 2026-10-19 | Recorded owner decisions: exact identifier forms (`servio-ai`, `SERVIO_AI_`); English required in the first release; confirmed name, two-layer tenant isolation, and no-GPU requirement | Proposed; superseded by 1.3.0 before ratification |
-| 1.3.0 | 2026-10-20 | Amendments A1–A6: vertical-slice roadmap (Phase 0 + 9 phases); provider data controls and mock fallback; Baseline rows for Python 3.12, job queue, Supabase CLI migrations, OpenTelemetry; supported Next.js LTS; PostgreSQL-first temporal graph with optional Neo4j; platform trust boundary, MFA, support grants, no break-glass | Proposed; awaiting owner ratification |
+| 1.3.0 | 2026-10-20 | Amendments A1–A6: vertical-slice roadmap (Phase 0 + 9 phases); provider data controls and mock fallback; Baseline rows for Python 3.12, job queue, Supabase CLI migrations, OpenTelemetry; supported Next.js LTS; PostgreSQL-first temporal graph with optional Neo4j; platform trust boundary, MFA, support grants, no break-glass | Proposed; superseded by 2.0.0 before ratification |
+| 2.0.0 | 2026-10-21 | B1–B5: canonical name Servio and new identifier forms (`servio_ai` retained); Next.js 14.2.35 + React 18.3.1 under exception X2; Python 3.12 confirmed; DeepSeek primary with $5 cap; open decisions updated; approval-record wording corrected | Proposed; awaiting owner ratification |
 
 **Status**: Proposed. Not ratified; awaiting explicit owner approval.
 
-**Version**: 1.3.0 | **Ratified**: TODO(RATIFICATION_DATE): set on explicit owner approval | **Last Amended**: 2026-10-20
+**Version**: 2.0.0 | **Ratified**: TODO(RATIFICATION_DATE): set on explicit owner approval | **Last Amended**: 2026-10-21
